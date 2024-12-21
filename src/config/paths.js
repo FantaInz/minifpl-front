@@ -1,35 +1,34 @@
 export const paths = {
-    home: {
-      path: '/',
-      getHref: () => '/',
+  home: {
+    path: "/",
+    getHref: () => "/",
+  },
+  auth: {
+    main: {
+      path: "/auth",
+      getHref: () => "/auth",
     },
-    auth: {
-      main: {
-        path: '/auth',
-        getHref: () => '/auth',
-      },
+  },
+  app: {
+    root: {
+      path: "/app",
+      getHref: () => "/app",
     },
-    app: {
-      root: {
-        path: '/app',
-        getHref: () => '/app',
-      },
-      solver: {
-        path: '/app/solver',
-        getHref: () => '/app/solver',
-      },
-      plans: {
-        path: '/app/plans',
-        getHref: () => '/app/plans',
-      },
-      predictions: {
-        path: '/app/predictions',
-        getHref: () => '/app/predictions',
-      },
-      userPanel: {
-        path: '/app/user-panel',
-        getHref: () => '/app/user-panel',
-      },
+    solver: {
+      path: "/app/solver",
+      getHref: () => "/app/solver",
     },
-  };
-  
+    plans: {
+      path: "/app/plans",
+      getHref: () => "/app/plans",
+    },
+    predictions: {
+      path: "/app/predictions",
+      getHref: () => "/app/predictions",
+    },
+    userPanel: {
+      path: "/app/user-panel",
+      getHref: () => "/app/user-panel",
+    },
+  },
+};
