@@ -1,8 +1,12 @@
 import React from "react";
 
 import { AppProvider } from "./provider";
-//import { AppRouter } from "./router";
+import { AppRouter } from "./router";
 
 export const App = () => {
-  return <AppProvider></AppProvider>;
+  return (
+    <AppProvider>
+      <AppRouter />
+    </AppProvider>
+  );
 };
