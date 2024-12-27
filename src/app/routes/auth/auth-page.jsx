@@ -1,15 +1,12 @@
 import React from "react";
-import { Box, Heading, Button } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+import LoginForm from "@/features/auth/LoginForm";
 
 const AuthPage = () => {
   return (
-    <Box className="flex h-screen w-screen flex-col items-center justify-center">
-      <Heading mb={6}>Logowanie / Rejestracja</Heading>
-      <Button colorScheme="blue" mb={4}>
-        Zaloguj się
-      </Button>
-      <Button colorScheme="green">Zarejestruj się</Button>
-    </Box>
+    <Flex height="100vh" width="100vw" align="center" justify="center">
+      <LoginForm />
+    </Flex>
   );
 };
 
