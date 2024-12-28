@@ -3,9 +3,11 @@ import { Spinner, Box } from "@chakra-ui/react";
 
 export const Loading = () => (
   <Box
-    className="flex h-screen w-screen items-center justify-center"
-    role="status"
+    height="100vh"
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
   >
-    <Spinner size="xl" />
+    <Spinner size="xl" role="status" />
   </Box>
 );

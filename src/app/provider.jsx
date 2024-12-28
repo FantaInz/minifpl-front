@@ -4,7 +4,7 @@ import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import PropTypes from "prop-types";
 
-import { MainErrorFallback } from "@/components/errors/main";
+import { MainErrorFallback } from "@/components/errors/main-error-fallback";
 import { AuthLoader } from "@/lib/auth";
 import { queryConfig } from "@/lib/react-query";
 import { Provider } from "@/components/ui/provider";
@@ -12,21 +12,21 @@ import { Loading } from "@/components/ui/loading";
 
 export const AppProvider = ({ children }) => {
   const [queryClient] = React.useState(
-    () => new QueryClient({ defaultOptions: queryConfig })
+    () => new QueryClient({ defaultOptions: queryConfig }),
   );
 
   return (
     <Provider>
-      <React.Suspense fallback={<Loading />}>
-        <ErrorBoundary FallbackComponent={MainErrorFallback}>
+      <ErrorBoundary FallbackComponent={MainErrorFallback}>
+        <React.Suspense fallback={<Loading />}>
           <QueryClientProvider client={queryClient}>
             {import.meta.env.DEV && <ReactQueryDevtools />}
             <AuthLoader renderLoading={() => <Loading />}>
               {children}
             </AuthLoader>
           </QueryClientProvider>
-        </ErrorBoundary>
-      </React.Suspense>
+        </React.Suspense>
+      </ErrorBoundary>
     </Provider>
   );
 };

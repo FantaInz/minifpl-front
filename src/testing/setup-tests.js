@@ -3,11 +3,21 @@ import { cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 
 const originalConsoleError = console.error;
-const jsDomCssError = "Error: Could not parse CSS stylesheet";
+
+const ignoredErrors = [
+  "Error: Could not parse CSS stylesheet",
+  "Test Error",
+  "The above error occurred in the <ErrorThrowingComponent> component",
+];
+
 console.error = (...params) => {
-  if (!params.find((p) => p.toString().includes(jsDomCssError))) {
-    originalConsoleError(...params);
+  const message = params.join(" ");
+
+  if (ignoredErrors.some((error) => message.includes(error))) {
+    return;
   }
+
+  originalConsoleError(...params);
 };
 
 afterEach(() => {
@@ -16,10 +26,8 @@ afterEach(() => {
 
 window.matchMedia =
   window.matchMedia ||
-  (() => {
-    return {
-      matches: false,
-      addListener: () => {},
-      removeListener: () => {},
-    };
-  });
+  (() => ({
+    matches: false,
+    addListener: () => {},
+    removeListener: () => {},
+  }));

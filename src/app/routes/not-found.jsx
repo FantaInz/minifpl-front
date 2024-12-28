@@ -36,9 +36,6 @@ const NotFoundPage = () => {
         <Text fontSize="lg" color="gray.600">
           Ups! Strona, której szukasz, nie została znaleziona.
         </Text>
-        <Text fontSize="md" color="gray.500">
-          Sprawdź, czy adres URL jest poprawny lub wróć do strony głównej.
-        </Text>
 
         <Button
           as={RouterLink}
@@ -46,7 +43,7 @@ const NotFoundPage = () => {
           size="lg"
           borderRadius="full"
           boxShadow="md"
-          colorPalette="blue"
+          colorPalette="purple"
         >
           {buttonText}
         </Button>

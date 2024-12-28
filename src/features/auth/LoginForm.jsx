@@ -1,13 +1,23 @@
 import { useState, React } from "react";
-import { Box, Button, Stack, Input, Tabs } from "@chakra-ui/react";
+import { Box, Stack, Input, Tabs, Text } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
+import { useLogin, useRegister } from "@/lib/auth";
+import Logo from "@/components/ui/logo";
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { useForm } from "react-hook-form";
-
-import Logo from "@/components/ui/logo";
+import { translateError } from "@/utils/translate-error";
+import { Button } from "@/components/ui/button";
 
 const LoginForm = () => {
   const [activeTab, setActiveTab] = useState("login");
+  const [loginError, setLoginError] = useState("");
+  const [registerError, setRegisterError] = useState("");
+  const [isLoggingInLocal, setIsLoggingInLocal] = useState(false);
+  const [isRegisteringLocal, setIsRegisteringLocal] = useState(false);
+
+  const navigate = useNavigate();
 
   const {
     register: loginRegister,
@@ -15,10 +25,28 @@ const LoginForm = () => {
     formState: { errors: loginErrors },
   } = useForm();
 
+  const { mutate: login, isLoading: isLoggingIn } = useLogin();
+
   const onLoginSubmit = (data) => {
-    console.log("Logowanie:", data);
-    // Fetch do endpointa logowania
-    // fetch('/api/login', { method: 'POST', body: JSON.stringify(data) })
+    setLoginError("");
+    setIsLoggingInLocal(true);
+
+    login(data, {
+      onSuccess: () => {
+        console.log("Zalogowano pomyślnie!");
+        navigate("/solver");
+      },
+      onError: (error) => {
+        const translatedError = translateError(
+          error.response?.data?.detail || error.message,
+        );
+        console.error("Błąd logowania:", translatedError);
+        setLoginError(translatedError);
+      },
+      onSettled: () => {
+        setIsLoggingInLocal(false);
+      },
+    });
   };
 
   const {
@@ -27,10 +55,46 @@ const LoginForm = () => {
     formState: { errors: registerErrors },
   } = useForm();
 
+  const { mutate: register, isLoading: isRegistering } = useRegister();
+
   const onRegisterSubmit = (data) => {
-    console.log("Rejestracja:", data);
-    // Fetch do endpointa rejestracji
-    // fetch('/api/register', { method: 'POST', body: JSON.stringify(data) })
+    setRegisterError("");
+    setIsRegisteringLocal(true);
+
+    register(data, {
+      onSuccess: () => {
+        console.log("Zarejestrowano pomyślnie!");
+        login(
+          { username: data.username, password: data.password },
+          {
+            onSuccess: () => {
+              console.log("Zalogowano po rejestracji!");
+              navigate("/solver");
+            },
+            onError: (error) => {
+              const translatedError = translateError(
+                error.response?.data?.detail || error.message,
+              );
+              console.error("Błąd logowania po rejestracji:", translatedError);
+              setRegisterError(translatedError);
+            },
+            onSettled: () => {
+              setIsRegisteringLocal(false);
+            },
+          },
+        );
+      },
+      onError: (error) => {
+        const translatedError = translateError(
+          error.response?.data?.detail || error.message,
+        );
+        console.error("Błąd rejestracji:", translatedError);
+        setRegisterError(translatedError);
+      },
+      onSettled: () => {
+        setIsRegisteringLocal(false);
+      },
+    });
   };
 
   return (
@@ -59,19 +123,15 @@ const LoginForm = () => {
           <form onSubmit={handleLoginSubmit(onLoginSubmit)}>
             <Stack spacing={4}>
               <Field
-                label="Adres e-mail"
-                invalid={!!loginErrors.email}
-                errorText={loginErrors.email?.message}
+                label="Nazwa użytkownika"
+                invalid={!!loginErrors.username}
+                errorText={loginErrors.username?.message}
               >
                 <Input
                   border="1px solid"
                   borderColor="gray.400"
-                  {...loginRegister("email", {
-                    required: "Adres e-mail jest wymagany",
-                    pattern: {
-                      value: /^\S+@\S+\.\S+$/,
-                      message: "Nieprawidłowy adres e-mail",
-                    },
+                  {...loginRegister("username", {
+                    required: "Nazwa użytkownika jest wymagana",
                   })}
                 />
               </Field>
@@ -90,7 +150,15 @@ const LoginForm = () => {
                 />
               </Field>
 
-              <Button type="submit" colorPalette="green" width="full" mt={5}>
+              {loginError && <Text color="red.500">{loginError}</Text>}
+
+              <Button
+                type="submit"
+                colorPalette="green"
+                width="full"
+                mt={5}
+                loading={isLoggingIn || isLoggingInLocal}
+              >
                 Zaloguj się
               </Button>
             </Stack>
@@ -100,6 +168,24 @@ const LoginForm = () => {
         <Tabs.Content value="register">
           <form onSubmit={handleRegisterSubmit(onRegisterSubmit)}>
             <Stack spacing={4}>
+              <Field
+                label="Nazwa użytkownika"
+                invalid={!!registerErrors.username}
+                errorText={registerErrors.username?.message}
+              >
+                <Input
+                  border="1px solid"
+                  borderColor="gray.400"
+                  {...registerRegister("username", {
+                    required: "Nazwa użytkownika jest wymagana",
+                    minLength: {
+                      value: 3,
+                      message:
+                        "Nazwa użytkownika musi mieć co najmniej 3 znaki",
+                    },
+                  })}
+                />
+              </Field>
               <Field
                 label="Adres e-mail"
                 invalid={!!registerErrors.email}
@@ -136,21 +222,15 @@ const LoginForm = () => {
                 />
               </Field>
 
-              <Field
-                label="ID zespołu"
-                invalid={!!registerErrors.teamId}
-                errorText={registerErrors.teamId?.message}
-              >
-                <Input
-                  border="1px solid"
-                  borderColor="gray.400"
-                  {...registerRegister("teamId", {
-                    required: "ID zespołu jest wymagane",
-                  })}
-                />
-              </Field>
+              {registerError && <Text color="red.500">{registerError}</Text>}
 
-              <Button type="submit" colorPalette="purple" width="full" mt={5}>
+              <Button
+                type="submit"
+                colorPalette="purple"
+                width="full"
+                mt={5}
+                loading={isRegistering || isRegisteringLocal}
+              >
                 Zarejestruj się
               </Button>
             </Stack>
