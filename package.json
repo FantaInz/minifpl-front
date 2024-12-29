@@ -72,7 +72,7 @@
       "git add ."
     ],
     "*.{test.js,test.jsx}": [
-      "vitest --run",
+      "vitest --run --environment jsdom",
       "git add ."
     ]
   }

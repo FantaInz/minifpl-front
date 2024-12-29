@@ -7,7 +7,7 @@ import { api } from "./api-client";
 import { storage } from "@/utils/storage";
 import { paths } from "@/config/paths";
 
-const getUser = async () => {
+export const getUser = async () => {
   const token = storage.getToken();
   if (!token) {
     console.log("Brak tokena - użytkownik niezalogowany.");
@@ -23,7 +23,7 @@ const getUser = async () => {
   }
 };
 
-const login = async (data) => {
+export const login = async (data) => {
   const formData = {
     grant_type: "password",
     username: data.username,
@@ -39,12 +39,12 @@ const login = async (data) => {
   return getUser();
 };
 
-const register = async (data) => {
+export const register = async (data) => {
   await api.post("/api/user/register", data);
   return null;
 };
 
-const logout = async () => {
+export const logout = async () => {
   storage.clearToken();
   window.location.href = paths.auth.main.getHref();
 };

@@ -2,7 +2,6 @@ import Axios from "axios";
 import qs from "qs";
 
 import { env } from "@/config/env";
-import { paths } from "@/config/paths";
 import { storage } from "@/utils/storage";
 
 function authRequestInterceptor(config) {
@@ -39,13 +38,12 @@ api.interceptors.request.use(authRequestInterceptor);
 
 api.interceptors.response.use(
   (response) => {
-    return response.data; // Sukces
+    return response.data;
   },
   (error) => {
     console.error("API Error:", error.response?.data || error.message);
-
     const status = error.response?.status;
-    const requestUrl = error.config.url;
+    const requestUrl = error.config?.url || "";
 
     if (
       requestUrl.includes("/api/auth/login") ||
@@ -57,11 +55,7 @@ api.interceptors.response.use(
     if (status === 401) {
       const token = storage.getToken();
       if (token) {
-        storage.clearToken(); // Usuwamy token
-        const searchParams = new URLSearchParams();
-        const redirectTo =
-          searchParams.get("redirectTo") || window.location.pathname;
-        window.location.href = paths.auth.main.getHref(redirectTo);
+        storage.clearToken();
       }
     }
 
