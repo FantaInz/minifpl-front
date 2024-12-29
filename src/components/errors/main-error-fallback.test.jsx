@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
 
 import { ThemeWrapper } from "@/testing/theme-wrapper";
-import { MainErrorFallback } from "../main-error-fallback";
+import { MainErrorFallback } from "./main-error-fallback";
 
 describe("MainErrorFallback", () => {
   let originalLocation;

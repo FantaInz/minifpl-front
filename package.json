@@ -22,6 +22,7 @@
     "@tanstack/react-query-devtools": "^5.62.8",
     "axios": "^1.7.9",
     "js-cookie": "^3.0.5",
+    "msw": "^2.7.0",
     "next-themes": "^0.4.4",
     "prop-types": "^15.8.1",
     "qs": "^6.13.1",
@@ -68,6 +69,10 @@
     "*.{js,jsx}": [
       "prettier --write",
       "eslint --fix",
+      "git add ."
+    ],
+    "*.{test.js,test.jsx}": [
+      "vitest --run",
       "git add ."
     ]
   }

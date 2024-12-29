@@ -116,8 +116,8 @@ const LoginForm = () => {
         fitted
       >
         <Tabs.List>
-          <Tabs.Trigger value="login">Zaloguj się</Tabs.Trigger>
-          <Tabs.Trigger value="register">Zarejestruj się</Tabs.Trigger>
+          <Tabs.Trigger value="login">Logowanie</Tabs.Trigger>
+          <Tabs.Trigger value="register">Rejestracja</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="login">
           <form onSubmit={handleLoginSubmit(onLoginSubmit)}>
@@ -128,6 +128,7 @@ const LoginForm = () => {
                 errorText={loginErrors.username?.message}
               >
                 <Input
+                  data-testid="login-username"
                   border="1px solid"
                   borderColor="gray.400"
                   {...loginRegister("username", {
@@ -142,6 +143,7 @@ const LoginForm = () => {
                 errorText={loginErrors.password?.message}
               >
                 <PasswordInput
+                  data-testid="login-password"
                   border="1px solid"
                   borderColor="gray.400"
                   {...loginRegister("password", {
@@ -174,6 +176,7 @@ const LoginForm = () => {
                 errorText={registerErrors.username?.message}
               >
                 <Input
+                  data-testid="register-login"
                   border="1px solid"
                   borderColor="gray.400"
                   {...registerRegister("username", {
@@ -192,6 +195,7 @@ const LoginForm = () => {
                 errorText={registerErrors.email?.message}
               >
                 <Input
+                  data-testid="register-email"
                   border="1px solid"
                   borderColor="gray.400"
                   {...registerRegister("email", {
@@ -210,6 +214,7 @@ const LoginForm = () => {
                 errorText={registerErrors.password?.message}
               >
                 <PasswordInput
+                  data-testid="register-password"
                   border="1px solid"
                   borderColor="gray.400"
                   {...registerRegister("password", {

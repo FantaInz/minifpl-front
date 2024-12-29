@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeAll, afterAll } from "vitest";
 import * as React from "react";
 
-import { AppProvider } from "../provider";
+import { AppProvider } from "./provider";
 import { Loading } from "@/components/ui/loading";
 
 vi.mock("@/lib/auth", () => ({
