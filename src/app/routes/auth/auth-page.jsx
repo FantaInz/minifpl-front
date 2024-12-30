@@ -1,11 +1,11 @@
 import React from "react";
 import { Flex } from "@chakra-ui/react";
-import LoginForm from "@/features/auth/login-form";
+import AuthTabs from "@/features/auth/auth-tabs";
 
 const AuthPage = () => {
   return (
     <Flex height="100vh" width="100vw" align="center" justify="center">
-      <LoginForm />
+      <AuthTabs />
     </Flex>
   );
 };

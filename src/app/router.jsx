@@ -44,11 +44,7 @@ export const createAppRouter = () =>
     },
     {
       path: paths.app.predictions.path,
-      element: (
-        <ProtectedRoute>
-          <PredictionsPage />
-        </ProtectedRoute>
-      ),
+      element: <PredictionsPage />,
     },
     {
       path: "*",

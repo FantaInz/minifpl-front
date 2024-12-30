@@ -21,7 +21,10 @@ const Logo = ({ size = "xl" }) => {
       >
         MiniFPL
       </Text>
-      <IoIosFootball size={sizes[size]?.icon || "40px"} />
+      <IoIosFootball
+        data-testid="logo-icon"
+        size={sizes[size]?.icon || "40px"}
+      />
     </HStack>
   );
 };
