@@ -1,6 +1,6 @@
 import { configureAuth } from "react-query-auth";
-import { Navigate, useLocation } from "react-router";
 import React from "react";
+import { Navigate, useLocation } from "react-router";
 import PropTypes from "prop-types";
 
 import { api } from "./api-client";

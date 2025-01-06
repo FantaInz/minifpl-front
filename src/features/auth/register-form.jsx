@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Stack, Input, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 import { useRegister, useLogin } from "@/lib/auth";
 import { Field } from "@/components/ui/field";
@@ -13,7 +12,6 @@ const RegisterForm = () => {
   const [registerError, setRegisterError] = useState("");
   const [isRegisteringLocal, setIsRegisteringLocal] = useState(false);
 
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -34,7 +32,6 @@ const RegisterForm = () => {
           {
             onSuccess: () => {
               console.log("Zalogowano po rejestracji!");
-              navigate("/solver");
             },
             onError: (error) => {
               const translatedError = translateError(

@@ -1,17 +1,19 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 
-export const LogoutButton = ({ onClick, isLoading, ...props }) => {
+export const LogoutButton = React.forwardRef(function LogoutButton(
+  { onClick, isLoading, ...props },
+  ref,
+) {
   return (
     <Button
       colorPalette="red"
-      width="full"
-      mt={5}
       onClick={onClick}
       loading={isLoading}
+      ref={ref}
       {...props}
     >
       Wyloguj się
     </Button>
   );
-};
+});
