@@ -39,7 +39,7 @@ const LogoutModal = ({ isOpen, onConfirm, onClose }) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Wylogowanie</DialogTitle>
+          <DialogTitle>Zakończenie sesji</DialogTitle>
         </DialogHeader>{" "}
         <DialogBody>
           <Text>

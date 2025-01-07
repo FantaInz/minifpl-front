@@ -6,11 +6,18 @@ import LoginForm from "./login-form";
 import ThemeWrapper from "@/testing/theme-wrapper";
 
 const mockLogin = vi.fn();
+const mockGoToSolver = vi.fn();
 
 vi.mock("@/lib/auth", () => ({
   useLogin: () => ({
     mutate: mockLogin,
     isLoading: false,
+  }),
+}));
+
+vi.mock("@/hooks/use-navigation", () => ({
+  useNavigation: () => ({
+    goToSolver: mockGoToSolver,
   }),
 }));
 
@@ -64,6 +71,27 @@ describe("LoginForm", () => {
         { username: "testuser", password: "password123" },
         expect.anything(),
       );
+    });
+  });
+
+  it("navigates to solver on successful login", async () => {
+    mockLogin.mockImplementation((data, { onSuccess }) => {
+      onSuccess();
+    });
+
+    render(<LoginForm />, { wrapper: ThemeWrapper });
+
+    fireEvent.change(screen.getByTestId("login-username"), {
+      target: { value: "testuser" },
+    });
+    fireEvent.change(screen.getByTestId("login-password"), {
+      target: { value: "password123" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Zaloguj się" }));
+
+    await waitFor(() => {
+      expect(mockGoToSolver).toHaveBeenCalled();
     });
   });
 

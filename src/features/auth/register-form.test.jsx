@@ -7,6 +7,7 @@ import ThemeWrapper from "@/testing/theme-wrapper";
 
 const mockRegister = vi.fn();
 const mockLogin = vi.fn();
+const mockGoToSolver = vi.fn();
 
 vi.mock("@/lib/auth", () => ({
   useRegister: () => ({
@@ -16,6 +17,12 @@ vi.mock("@/lib/auth", () => ({
   useLogin: () => ({
     mutate: mockLogin,
     isLoading: false,
+  }),
+}));
+
+vi.mock("@/hooks/use-navigation", () => ({
+  useNavigation: () => ({
+    goToSolver: mockGoToSolver,
   }),
 }));
 
@@ -69,6 +76,65 @@ describe("RegisterForm", () => {
         },
         expect.anything(),
       );
+    });
+  });
+
+  it("logs in after successful registration", async () => {
+    mockRegister.mockImplementation((data, { onSuccess }) => {
+      onSuccess();
+    });
+
+    mockLogin.mockImplementation((data, { onSuccess }) => {
+      onSuccess();
+    });
+
+    render(<RegisterForm />, { wrapper: ThemeWrapper });
+
+    fireEvent.change(screen.getByTestId("register-username"), {
+      target: { value: "newuser" },
+    });
+    fireEvent.change(screen.getByTestId("register-email"), {
+      target: { value: "email@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("register-password"), {
+      target: { value: "password123" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Zarejestruj się" }));
+
+    await waitFor(() => {
+      expect(mockLogin).toHaveBeenCalledWith(
+        { username: "newuser", password: "password123" },
+        expect.anything(),
+      );
+    });
+  });
+
+  it("redirects to solver after successful registration and login", async () => {
+    mockRegister.mockImplementation((data, { onSuccess }) => {
+      onSuccess();
+    });
+
+    mockLogin.mockImplementation((data, { onSuccess }) => {
+      onSuccess();
+    });
+
+    render(<RegisterForm />, { wrapper: ThemeWrapper });
+
+    fireEvent.change(screen.getByTestId("register-username"), {
+      target: { value: "newuser" },
+    });
+    fireEvent.change(screen.getByTestId("register-email"), {
+      target: { value: "email@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("register-password"), {
+      target: { value: "password123" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Zarejestruj się" }));
+
+    await waitFor(() => {
+      expect(mockGoToSolver).toHaveBeenCalled();
     });
   });
 

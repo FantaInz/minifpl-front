@@ -3,6 +3,7 @@ import { Stack, Input, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
 import { useRegister, useLogin } from "@/lib/auth";
+import { useNavigation } from "@/hooks/use-navigation";
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { translateError } from "@/utils/translate-error";
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/button";
 const RegisterForm = () => {
   const [registerError, setRegisterError] = useState("");
   const [isRegisteringLocal, setIsRegisteringLocal] = useState(false);
+  const { goToSolver } = useNavigation();
 
   const {
     register,
@@ -32,6 +34,7 @@ const RegisterForm = () => {
           {
             onSuccess: () => {
               console.log("Zalogowano po rejestracji!");
+              goToSolver();
             },
             onError: (error) => {
               const translatedError = translateError(

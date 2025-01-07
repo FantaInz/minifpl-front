@@ -24,6 +24,7 @@ const AuthTabs = () => {
 
   const handleLogout = async () => {
     await logout.mutateAsync();
+    setIsModalOpen(false);
     goToAuth();
   };
 
