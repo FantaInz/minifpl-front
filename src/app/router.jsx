@@ -1,11 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import React from "react";
 import { paths } from "@/config/paths";
 import { ProtectedRoute } from "@/lib/auth";
 
+import AppLayout from "@/features/navbar/app-layout";
 import AuthPage from "@/app/routes/auth/auth-page";
 import SolverPage from "@/app/routes/app/solver";
 import PlansPage from "@/app/routes/app/plans";
@@ -22,29 +23,27 @@ export const createAppRouter = () =>
       path: paths.app.root.path,
       element: (
         <ProtectedRoute>
-          <SolverPage />
+          <AppLayout />
         </ProtectedRoute>
       ),
-    },
-    {
-      path: paths.app.solver.path,
-      element: (
-        <ProtectedRoute>
-          <SolverPage />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: paths.app.plans.path,
-      element: (
-        <ProtectedRoute>
-          <PlansPage />
-        </ProtectedRoute>
-      ),
-    },
-    {
-      path: paths.app.predictions.path,
-      element: <PredictionsPage />,
+      children: [
+        {
+          index: true,
+          element: <Navigate to={paths.app.solver.path} replace />,
+        },
+        {
+          path: paths.app.solver.path,
+          element: <SolverPage />,
+        },
+        {
+          path: paths.app.plans.path,
+          element: <PlansPage />,
+        },
+        {
+          path: paths.app.predictions.path,
+          element: <PredictionsPage />,
+        },
+      ],
     },
     {
       path: "*",

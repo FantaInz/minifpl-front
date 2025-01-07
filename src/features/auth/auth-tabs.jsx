@@ -14,7 +14,7 @@ const AuthTabs = () => {
 
   const { data: user } = useUser();
   const logout = useLogout();
-  const { goToAuth, goToSolver } = useNavigation();
+  const { goToSolver } = useNavigation();
 
   React.useEffect(() => {
     if (user) {
@@ -25,7 +25,6 @@ const AuthTabs = () => {
   const handleLogout = async () => {
     await logout.mutateAsync();
     setIsModalOpen(false);
-    goToAuth();
   };
 
   const handleCloseModal = async () => {

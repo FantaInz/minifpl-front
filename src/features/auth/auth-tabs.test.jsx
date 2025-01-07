@@ -5,7 +5,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import AuthTabs from "./auth-tabs";
 import ThemeWrapper from "@/testing/theme-wrapper";
 
-const mockGoToAuth = vi.fn();
 const mockGoToSolver = vi.fn();
 const mockLogout = vi.fn();
 
@@ -35,7 +34,6 @@ vi.mock("@/lib/auth", async (importOriginal) => {
 
 vi.mock("@/hooks/use-navigation", () => ({
   useNavigation: () => ({
-    goToAuth: mockGoToAuth,
     goToSolver: mockGoToSolver,
   }),
 }));
@@ -124,7 +122,7 @@ describe("AuthTabs", () => {
     expect(mockGoToSolver).toHaveBeenCalled();
   });
 
-  it("logs out and navigates to auth page when confirmed", async () => {
+  it("logs out when confirmed", async () => {
     mockUserData = { username: "testuser" };
 
     render(<AuthTabs />, { wrapper: ThemeWrapper });
@@ -134,6 +132,5 @@ describe("AuthTabs", () => {
     });
 
     expect(mockLogout).toHaveBeenCalled();
-    expect(mockGoToAuth).toHaveBeenCalled();
   });
 });
