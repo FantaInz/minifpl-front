@@ -17,10 +17,14 @@ const AuthTabs = () => {
   const { goToSolver } = useNavigation();
 
   React.useEffect(() => {
-    if (user) {
-      setIsModalOpen(true);
-    }
-  }, [user]);
+    const timeout = setTimeout(() => {
+      if (user && !logout.isLoading) {
+        setIsModalOpen(true);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [user, logout.isLoading]);
 
   const handleLogout = async () => {
     await logout.mutateAsync();

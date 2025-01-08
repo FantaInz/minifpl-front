@@ -87,8 +87,8 @@ const TeamModal = ({ isOpen, onSubmit }) => {
                       required: "ID jest wymagane",
                       min: { value: 1, message: "ID musi być większe od zera" },
                       max: {
-                        value: 20000000,
-                        message: "ID nie może być większe niż 20 milionów",
+                        value: 12000000,
+                        message: "ID nie może być większe niż 12 milionów",
                       },
                     })}
                   />
