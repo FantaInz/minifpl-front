@@ -55,19 +55,19 @@ describe("TeamModal", () => {
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
-  it("displays error when input value exceeds 20 million", async () => {
+  it("displays error when input value exceeds 12 million", async () => {
     renderModal(true);
 
     const input = screen.getByTestId("team-id-input");
     const submitButton = screen.getByText("Zapisz");
 
     await act(async () => {
-      fireEvent.input(input, { target: { value: "20000001" } });
+      fireEvent.input(input, { target: { value: "12000001" } });
       fireEvent.click(submitButton);
     });
 
     expect(
-      screen.getByText("ID nie może być większe niż 20 milionów"),
+      screen.getByText("ID nie może być większe niż 12 milionów"),
     ).toBeInTheDocument();
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });

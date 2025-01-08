@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Box, Heading, Text, Spinner } from "@chakra-ui/react";
+import { Box, Spinner, Flex } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import TeamModal from "@/features/solver/team-modal";
+import Pitch from "@/components/ui/pitch";
+import SolverForm from "@/features/solver/solver-form";
 import { useUser } from "@/lib/auth";
 import { useSquad } from "@/features/solver/api/get-squad";
 
@@ -59,15 +61,24 @@ const SolverPage = () => {
   }
 
   return (
-    <Box className="flex h-screen w-screen items-center justify-center flex-col">
-      <Heading>Solver</Heading>
-      <Text>Tu będzie solver</Text>
-      {squadData && (
-        <Box mt={4} p={4} borderWidth={1} borderRadius={8}>
-          <Text>Skład:</Text>
-          <pre>{JSON.stringify(squadData, null, 2)}</pre>
+    <Box height="100vh">
+      <Flex height="100%" flexDirection={["column", "row"]}>
+        <Box flex="1" p={4} order={[2, 1]}>
+          <Pitch
+            players={squadData?.players || []}
+            gameweek={squadData?.lastUpdate}
+          />
         </Box>
-      )}
+        <Box flex="1" p={4} order={[1, 2]}>
+          <SolverForm
+            freeTransfers={squadData?.freeTransfers}
+            budget={squadData?.transferBudget / 10}
+            teamId={teamId}
+            onSubmit={(data) => console.log("Form Submitted:", data)}
+          />
+        </Box>
+      </Flex>
+
       <TeamModal isOpen={isModalOpen} onSubmit={handleSubmitTeamId} />
     </Box>
   );

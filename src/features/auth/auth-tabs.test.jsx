@@ -1,5 +1,11 @@
 import React from "react";
-import { render, screen, fireEvent, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import AuthTabs from "./auth-tabs";
@@ -99,7 +105,9 @@ describe("AuthTabs", () => {
 
     render(<AuthTabs />, { wrapper: ThemeWrapper });
 
-    expect(screen.getByTestId("mocked-logout-modal")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByTestId("mocked-logout-modal")).toBeInTheDocument(),
+    );
   });
 
   it("does not render logout modal when user is not logged in", async () => {
@@ -115,6 +123,10 @@ describe("AuthTabs", () => {
 
     render(<AuthTabs />, { wrapper: ThemeWrapper });
 
+    await waitFor(() =>
+      expect(screen.getByTestId("mocked-logout-modal")).toBeInTheDocument(),
+    );
+
     await act(async () => {
       fireEvent.click(screen.getByText("Wróć do solvera"));
     });
@@ -127,10 +139,32 @@ describe("AuthTabs", () => {
 
     render(<AuthTabs />, { wrapper: ThemeWrapper });
 
+    await waitFor(() =>
+      expect(screen.getByTestId("mocked-logout-modal")).toBeInTheDocument(),
+    );
+
     await act(async () => {
       fireEvent.click(screen.getByText("Wyloguj"));
     });
 
     expect(mockLogout).toHaveBeenCalled();
+  });
+
+  it("does not render logout modal immediately after logging in", async () => {
+    mockUserData = { username: "testuser" };
+
+    render(<AuthTabs />, { wrapper: ThemeWrapper });
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 200)); // Krótszy czas
+    });
+
+    expect(screen.queryByTestId("mocked-logout-modal")).not.toBeInTheDocument();
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 600)); // Czekamy 500ms
+    });
+
+    expect(screen.getByTestId("mocked-logout-modal")).toBeInTheDocument();
   });
 });
