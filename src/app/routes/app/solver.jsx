@@ -60,19 +60,31 @@ const SolverPage = () => {
     );
   }
 
+  const processedPlayers =
+    squadData?.players.map((player) => ({
+      ...player,
+      points: Number(parseFloat(player.points).toFixed(2)),
+      expectedPoints: player.expectedPoints.map((point) =>
+        Number(parseFloat(point).toFixed(2)),
+      ),
+    })) || [];
+
   return (
     <Box height="100vh">
       <Flex height="100%" flexDirection={["column", "row"]}>
         <Box flex="1" p={4} order={[2, 1]}>
           <Pitch
-            players={squadData?.players || []}
+            players={processedPlayers}
             gameweek={squadData?.lastUpdate}
+            future={false}
           />
         </Box>
         <Box flex="1" p={4} order={[1, 2]}>
           <SolverForm
             freeTransfers={squadData?.freeTransfers}
-            budget={squadData?.transferBudget / 10}
+            budget={Number(
+              parseFloat(squadData?.transferBudget / 10).toFixed(1),
+            )}
             teamId={teamId}
             onSubmit={(data) => console.log("Form Submitted:", data)}
           />

@@ -34,8 +34,18 @@ vi.mock("@/lib/auth", async (importOriginal) => {
 const mockSquadData = {
   lastUpdate: 1,
   players: [
-    { id: 1, name: "Player 1" },
-    { id: 2, name: "Player 2" },
+    {
+      id: 1,
+      name: "Player 1",
+      points: 5,
+      expectedPoints: [3.4567, 4.5678],
+    },
+    {
+      id: 2,
+      name: "Player 2",
+      points: 6,
+      expectedPoints: [4.1234, 5.3456],
+    },
   ],
   freeTransfers: 2,
   transferBudget: 1000,
