@@ -79,6 +79,7 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
 
   const onFormSubmit = (data) => {
     const mappedData = {
+      planName: data.planName,
       weeks: data.gameweeks.value[0],
       must_have: playersToKeep.map((tag) => tag.id - 1),
       cant_have: playersToAvoid.map((tag) => tag.id - 1),

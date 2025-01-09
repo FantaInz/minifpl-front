@@ -9,17 +9,28 @@ import LoadingModal from "@/components/ui/loading-modal";
 import { useUser } from "@/lib/auth";
 import { useSquad } from "@/features/solver/api/get-squad";
 import { useOptimizeSquad } from "@/features/solver/api/optimize-squad";
+import { useSavePlan } from "@/features/solver/api/save-plan";
 import { useNavigation } from "@/hooks/use-navigation";
+
+const translateErrorMessage = (message) => {
+  if (
+    message === "Optimization failed, probably due to unfeasible constraints"
+  ) {
+    return "Nie można spełnić wymagań.";
+  }
+  return "Wystąpił błąd podczas optymalizacji.";
+};
 
 const SolverPage = () => {
   const queryClient = useQueryClient();
-  const { goToSolver } = useNavigation();
+  const { goToSolver, goToPlans } = useNavigation();
   const { data: user, isLoading: isUserLoading } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [teamId, setTeamId] = useState(user?.squad_id || null);
   const [hasSquadId, setHasSquadId] = useState(!!user?.squad_id);
   const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [savedPlanName, setSavedPlanName] = useState("");
 
   const { data: squadData, isLoading: isSquadLoading } = useSquad(
     teamId || undefined,
@@ -31,26 +42,40 @@ const SolverPage = () => {
     },
   );
 
-  const optimizeSquadMutation = useOptimizeSquad({
+  const { mutate: savePlan } = useSavePlan({
     onSuccess: (data) => {
-      console.log("Optimized Squad:", data);
+      console.log("Plan zapisany:", data);
       setIsLoadingModalOpen(false);
       setErrorMessage("");
+      setSavedPlanName("");
+      goToPlans();
+    },
+    onError: (error) => {
+      console.error("Błąd zapisywania planu:", error.message);
+      setErrorMessage("Nie udało się zapisać planu. Spróbuj ponownie.");
+      setIsLoadingModalOpen(true);
+    },
+  });
+
+  const optimizeSquadMutation = useOptimizeSquad({
+    onSuccess: (optimizedData) => {
+      console.log("Optimized Squad:", optimizedData);
+      setErrorMessage("");
+      savePlan({
+        ...optimizedData,
+        name: savedPlanName,
+      });
     },
     onError: (error) => {
       console.error("Optimization Error:", error.message);
-      const message =
-        error.message ===
-        "Optimization failed, probably due to unfeasible constraints"
-          ? "Nie można spełnić wymagań."
-          : "Wystąpił błąd podczas optymalizacji. Sprawdź czy podałeś spełnialne ograniczenia i spróbuj ponownie.";
-      setErrorMessage(message);
+      const message = error.response?.data?.detail || error.message;
+      setErrorMessage(translateErrorMessage(message));
       setIsLoadingModalOpen(true);
     },
   });
 
   const handleSolverFormSubmit = (data) => {
-    console.log("Form Data Submitted:", data);
+    setSavedPlanName(data.planName);
     setIsLoadingModalOpen(true);
     optimizeSquadMutation.mutate(data);
   };

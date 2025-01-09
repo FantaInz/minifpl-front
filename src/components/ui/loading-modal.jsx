@@ -40,7 +40,7 @@ const LoadingModal = ({ isOpen, text, error, onClose }) => {
         </DialogBody>
         {error && (
           <DialogFooter display="flex" justifyContent="center">
-            <DialogActionTrigger>
+            <DialogActionTrigger asChild>
               <Button colorPalette="purple" onClick={onClose}>
                 Wróć do solvera
               </Button>
