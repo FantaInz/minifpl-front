@@ -46,6 +46,7 @@ export const register = async (data) => {
 
 export const logout = async () => {
   storage.clearToken();
+  localStorage.clear();
   window.location.href = paths.auth.main.getHref();
 };
 

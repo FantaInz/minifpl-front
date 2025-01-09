@@ -7,6 +7,7 @@ import Logo from "@/components/ui/logo";
 import LogoutModal from "./logout-modal";
 import { useUser, useLogout } from "@/lib/auth";
 import { useNavigation } from "@/hooks/use-navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AuthTabs = () => {
   const [activeTab, setActiveTab] = React.useState("login");
@@ -15,6 +16,7 @@ const AuthTabs = () => {
   const { data: user } = useUser();
   const logout = useLogout();
   const { goToSolver } = useNavigation();
+  const queryClient = useQueryClient();
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
@@ -27,6 +29,7 @@ const AuthTabs = () => {
   }, [user, logout.isLoading]);
 
   const handleLogout = async () => {
+    queryClient.clear();
     await logout.mutateAsync();
     setIsModalOpen(false);
   };

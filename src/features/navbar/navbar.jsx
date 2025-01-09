@@ -8,6 +8,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import NavLinkItem from "./nav-link-item";
@@ -30,8 +31,11 @@ const NavBar = () => {
 
   const logout = useLogout();
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
+    localStorage.clear();
+    queryClient.clear();
     await logout.mutateAsync();
   };
 

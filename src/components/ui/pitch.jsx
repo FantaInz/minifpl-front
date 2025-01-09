@@ -57,7 +57,7 @@ const Pitch = ({ players, gameweek, future }) => {
       {def.length > 0 && <>{renderRow(def)}</>}
       {mid.length > 0 && <>{renderRow(mid)}</>}
       {fwd.length > 0 && <>{renderRow(fwd)}</>}
-      <Box bg="blue.200" mt={11} borderRadius="md" p={[0, 5]}>
+      <Box bg="blue.200" mt={[12, 14]} borderRadius="md" p={[0, 5]}>
         <Flex justify="center" wrap="wrap" gap={2}>
           {benchPlayers.map((player) => {
             const displayPoints = getDisplayPoints(player);

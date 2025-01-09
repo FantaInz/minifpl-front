@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Spinner, Flex } from "@chakra-ui/react";
+import { Box, Spinner, Flex, Heading } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import TeamModal from "@/features/solver/team-modal";
@@ -63,16 +63,25 @@ const SolverPage = () => {
   const processedPlayers =
     squadData?.players.map((player) => ({
       ...player,
-      points: Number(parseFloat(player.points).toFixed(2)),
       expectedPoints: player.expectedPoints.map((point) =>
         Number(parseFloat(point).toFixed(2)),
       ),
     })) || [];
 
   return (
-    <Box height="100vh">
-      <Flex height="100%" flexDirection={["column", "row"]}>
+    <Box>
+      <Flex
+        height="100%"
+        flexDirection={{
+          base: "column",
+          xl: "row",
+        }}
+      >
         <Box flex="1" p={4} order={[2, 1]}>
+          <Heading size="4xl" mb={4} textAlign="center">
+            Twój Skład w GW{squadData?.lastUpdate}
+          </Heading>
+
           <Pitch
             players={processedPlayers}
             gameweek={squadData?.lastUpdate}
@@ -86,6 +95,7 @@ const SolverPage = () => {
               parseFloat(squadData?.transferBudget / 10).toFixed(1),
             )}
             teamId={teamId}
+            teamName={squadData?.name}
             onSubmit={(data) => console.log("Form Submitted:", data)}
           />
         </Box>

@@ -156,13 +156,13 @@ describe("AuthTabs", () => {
     render(<AuthTabs />, { wrapper: ThemeWrapper });
 
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 200)); // Krótszy czas
+      await new Promise((resolve) => setTimeout(resolve, 200));
     });
 
     expect(screen.queryByTestId("mocked-logout-modal")).not.toBeInTheDocument();
 
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 600)); // Czekamy 500ms
+      await new Promise((resolve) => setTimeout(resolve, 600));
     });
 
     expect(screen.getByTestId("mocked-logout-modal")).toBeInTheDocument();

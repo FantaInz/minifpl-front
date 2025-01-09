@@ -12,6 +12,7 @@ export const Button = React.forwardRef(function Button(props, ref) {
     <ChakraButton
       disabled={loading || disabled}
       ref={ref}
+      borderRadius="xl"
       {...rest}
       fontWeight="semibold"
     >
