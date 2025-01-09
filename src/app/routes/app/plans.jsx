@@ -30,6 +30,8 @@ const PlansPage = () => {
 
   React.useEffect(() => {
     if (plans && plans.length > 0) {
+      const highestId = Math.max(...plans.map((plan) => plan.id));
+      setSelectedPlanId(highestId.toString());
       const collection = createListCollection({
         items: plans.map((plan) => ({
           label: plan.name,
@@ -37,13 +39,9 @@ const PlansPage = () => {
         })),
       });
       setPlansCollection(collection);
-
-      if (selectedPlanId === null) {
-        const highestId = Math.max(...plans.map((plan) => plan.id));
-        setSelectedPlanId(highestId.toString());
-      }
+      console.log(plansCollection);
     }
-  }, [plans, selectedPlanId]);
+  }, [plans]);
 
   const { data: planDetails, isLoading: isLoadingPlan } = usePlan(
     selectedPlanId,
@@ -82,7 +80,6 @@ const PlansPage = () => {
         flexDirection="column"
       >
         <Spinner size="xl" role="status" />
-        <Text mt={4}>Ładowanie danych...</Text>
       </Flex>
     );
   }
@@ -138,8 +135,10 @@ const PlansPage = () => {
             borderRadius="md"
             shadow="lg"
             margin="auto"
-            value={selectedPlanId}
-            onValueChange={(e) => setSelectedPlanId(e.value[0])}
+            value={[selectedPlanId]}
+            onValueChange={(e) => {
+              setSelectedPlanId(e.value[0]);
+            }}
           >
             <SelectTrigger>
               <SelectValueText placeholder="Wybierz plan" />

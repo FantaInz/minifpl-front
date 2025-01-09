@@ -16,6 +16,7 @@ export const getPlanQueryOptions = (planId) => {
   return queryOptions({
     queryKey: ["plan", planId],
     queryFn: () => getPlan(planId),
+    enabled: !!planId,
   });
 };
 
