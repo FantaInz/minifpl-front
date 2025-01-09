@@ -10,3 +10,12 @@ export const translateError = (error) => {
 
   return errorMap[error] || "Wystąpił błąd. Spróbuj ponownie później.";
 };
+
+export const translateErrorSolver = (message) => {
+  if (
+    message === "Optimization failed, probably due to unfeasible constraints"
+  ) {
+    return "Nie można spełnić wymagań.";
+  }
+  return "Wystąpił błąd podczas optymalizacji.";
+};

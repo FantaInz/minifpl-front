@@ -3,7 +3,6 @@ import qs from "qs";
 
 import { env } from "@/config/env";
 import { storage } from "@/utils/storage";
-import { paths } from "@/config/paths";
 
 function authRequestInterceptor(config) {
   if (config.headers) {
@@ -60,7 +59,6 @@ api.interceptors.response.use(
         storage.clearToken();
       }
       localStorage.clear();
-      window.location.href = paths.auth.main.getHref();
     }
 
     return Promise.reject(error);

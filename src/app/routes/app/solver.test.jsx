@@ -81,7 +81,10 @@ vi.mock("@/features/solver/solver-form", () => ({
       <p>Free Transfers: {freeTransfers}</p>
       <p>Budget: {budget}</p>
       <p>Team ID: {teamId}</p>
-      <button data-testid="submit-button" onClick={() => onSubmit("data")}>
+      <button
+        data-testid="submit-button"
+        onClick={() => onSubmit({ planName: "My Plan" })}
+      >
         Submit
       </button>
     </div>

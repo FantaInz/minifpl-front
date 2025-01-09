@@ -11,15 +11,7 @@ import { useSquad } from "@/features/solver/api/get-squad";
 import { useOptimizeSquad } from "@/features/solver/api/optimize-squad";
 import { useSavePlan } from "@/features/solver/api/save-plan";
 import { useNavigation } from "@/hooks/use-navigation";
-
-const translateErrorMessage = (message) => {
-  if (
-    message === "Optimization failed, probably due to unfeasible constraints"
-  ) {
-    return "Nie można spełnić wymagań.";
-  }
-  return "Wystąpił błąd podczas optymalizacji.";
-};
+import { translateErrorSolver } from "@/utils/translate-error";
 
 const SolverPage = () => {
   const queryClient = useQueryClient();
@@ -69,7 +61,7 @@ const SolverPage = () => {
     onError: (error) => {
       console.error("Optimization Error:", error.message);
       const message = error.response?.data?.detail || error.message;
-      setErrorMessage(translateErrorMessage(message));
+      setErrorMessage(translateErrorSolver(message));
       setIsLoadingModalOpen(true);
     },
   });
