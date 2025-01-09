@@ -13,8 +13,18 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/components/ui/select";
+// import { usePlayers } from "@/features/search/api/search-players";
 
 const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
+  // const {
+  //   data: players,
+  //   isLoading,
+  //   error,
+  // } = usePlayers({
+  //   pageSize: 1000,
+  //   pageNumber: 0,
+  // });
+
   const gameweeksCollection = createListCollection({
     items: [
       { label: "1", value: "1" },
