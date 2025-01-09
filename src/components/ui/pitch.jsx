@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Box, Heading, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import Player from "@/components/ui/player";
 
 function groupPlayersByPosition(players) {
@@ -12,7 +12,7 @@ function groupPlayersByPosition(players) {
   return { gk, def, mid, fwd };
 }
 
-const Pitch = ({ players, gameweek, future }) => {
+const Pitch = ({ players, gameweek, displayMode }) => {
   const benchPlayers = players.slice(-4);
   const mainPlayers = players.slice(0, players.length - 4);
 
@@ -20,7 +20,22 @@ const Pitch = ({ players, gameweek, future }) => {
 
   const getDisplayPoints = (player) => {
     const { points, expectedPoints } = player;
-    return future ? expectedPoints[gameweek - 1] : points[points.length - 1];
+    const lastPoints = points[gameweek - 1];
+    const futurePoints = expectedPoints[gameweek - 1];
+
+    switch (displayMode) {
+      case "actual":
+        return lastPoints ?? points[points.length - 1];
+      case "expected":
+        return futurePoints;
+      case "both":
+        if (lastPoints !== null && lastPoints !== undefined) {
+          return `${lastPoints} / ${futurePoints}`;
+        }
+        return futurePoints;
+      default:
+        return lastPoints ?? points[points.length - 1];
+    }
   };
 
   const renderRow = (playersRow) => (
@@ -92,7 +107,7 @@ Pitch.propTypes = {
     }),
   ).isRequired,
   gameweek: PropTypes.number.isRequired,
-  future: PropTypes.bool.isRequired,
+  displayMode: PropTypes.oneOf(["actual", "expected", "both"]).isRequired,
 };
 
 export default Pitch;

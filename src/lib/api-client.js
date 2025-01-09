@@ -54,11 +54,11 @@ api.interceptors.response.use(
     }
 
     if (status === 401 || detail === "Not authenticated") {
+      localStorage.clear();
       const token = storage.getToken();
       if (token) {
         storage.clearToken();
       }
-      localStorage.clear();
     }
 
     return Promise.reject(error);

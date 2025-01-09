@@ -37,6 +37,7 @@ const SolverPage = () => {
   const { mutate: savePlan } = useSavePlan({
     onSuccess: (data) => {
       console.log("Plan zapisany:", data);
+      queryClient.invalidateQueries(["myPlans"]);
       setIsLoadingModalOpen(false);
       setErrorMessage("");
       setSavedPlanName("");
@@ -138,7 +139,7 @@ const SolverPage = () => {
           <Pitch
             players={processedPlayers}
             gameweek={squadData?.lastUpdate}
-            future={false}
+            displayMode="actual"
           />
         </Box>
         <Box flex="1" p={4} order={[1, 2]} mt={[0, 14]}>
