@@ -88,7 +88,7 @@ const SolverPage = () => {
             future={false}
           />
         </Box>
-        <Box flex="1" p={4} order={[1, 2]}>
+        <Box flex="1" p={4} order={[1, 2]} mt={[0, 14]}>
           <SolverForm
             freeTransfers={squadData?.freeTransfers}
             budget={Number(

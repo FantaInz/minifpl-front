@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Stack, Input, createListCollection } from "@chakra-ui/react";
 import { useForm, Controller } from "react-hook-form";
+import { WithContext as ReactTags } from "react-tag-input";
 
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -13,17 +14,40 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "@/components/ui/select";
-// import { usePlayers } from "@/features/search/api/search-players";
+import { usePlayers } from "@/features/search/api/search-players";
+import "./solver-form.css";
 
 const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
-  // const {
-  //   data: players,
-  //   isLoading,
-  //   error,
-  // } = usePlayers({
-  //   pageSize: 1000,
-  //   pageNumber: 0,
-  // });
+  const { data: players } = usePlayers({
+    pageSize: 1000,
+    pageNumber: 0,
+  });
+
+  const suggestions = players
+    ? players.map((player) => ({
+        id: player.id.toString(),
+        text: player.name,
+      }))
+    : [];
+
+  const [playersToKeep, setPlayersToKeep] = React.useState([]);
+  const [playersToAvoid, setPlayersToAvoid] = React.useState([]);
+
+  const handleDeleteKeep = (i) => {
+    setPlayersToKeep(playersToKeep.filter((_, index) => index !== i));
+  };
+
+  const handleAdditionKeep = (tag) => {
+    setPlayersToKeep([...playersToKeep, tag]);
+  };
+
+  const handleDeleteAvoid = (i) => {
+    setPlayersToAvoid(playersToAvoid.filter((_, index) => index !== i));
+  };
+
+  const handleAdditionAvoid = (tag) => {
+    setPlayersToAvoid([...playersToAvoid, tag]);
+  };
 
   const gameweeksCollection = createListCollection({
     items: [
@@ -57,6 +81,8 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
     const mappedData = {
       ...data,
       gameweeks: data.gameweeks.value[0],
+      playersToKeep: playersToKeep.map((tag) => tag.id - 1),
+      playersToAvoid: playersToAvoid.map((tag) => tag.id - 1),
     };
 
     onSubmit(mappedData);
@@ -75,7 +101,7 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
       <DataListRoot orientation="horizontal" divideY="1px" size="lg">
         {items.map((item) => (
           <DataListItem
-            pt="4"
+            pt="5"
             grow
             key={item.value}
             label={item.label}
@@ -134,6 +160,32 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
                   </SelectContent>
                 </SelectRoot>
               )}
+            />
+          </Field>
+
+          <Field label="Wymagani gracze">
+            <ReactTags
+              tags={playersToKeep}
+              suggestions={suggestions}
+              handleDelete={handleDeleteKeep}
+              handleAddition={handleAdditionKeep}
+              placeholder="Dodaj graczy"
+              autocomplete
+              inputFieldPosition="top"
+              minQueryLength="2"
+            />
+          </Field>
+
+          <Field label="Gracze do unikania">
+            <ReactTags
+              tags={playersToAvoid}
+              suggestions={suggestions}
+              handleDelete={handleDeleteAvoid}
+              handleAddition={handleAdditionAvoid}
+              placeholder="Dodaj graczy"
+              autocomplete
+              inputFieldPosition="top"
+              minQueryLength="2"
             />
           </Field>
 
