@@ -3,6 +3,7 @@ import qs from "qs";
 
 import { env } from "@/config/env";
 import { storage } from "@/utils/storage";
+import { paths } from "@/config/paths";
 
 function authRequestInterceptor(config) {
   if (config.headers) {
@@ -44,6 +45,7 @@ api.interceptors.response.use(
     console.error("API Error:", error.response?.data || error.message);
     const status = error.response?.status;
     const requestUrl = error.config?.url || "";
+    const detail = error.response?.data?.detail || "";
 
     if (
       requestUrl.includes("/api/auth/login") ||
@@ -52,11 +54,13 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (status === 401) {
+    if (status === 401 || detail === "Not authenticated") {
       const token = storage.getToken();
       if (token) {
         storage.clearToken();
       }
+      localStorage.clear();
+      window.location.href = paths.auth.main.getHref();
     }
 
     return Promise.reject(error);

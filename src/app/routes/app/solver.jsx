@@ -5,15 +5,21 @@ import { useQueryClient } from "@tanstack/react-query";
 import TeamModal from "@/features/solver/team-modal";
 import Pitch from "@/components/ui/pitch";
 import SolverForm from "@/features/solver/solver-form";
+import LoadingModal from "@/components/ui/loading-modal";
 import { useUser } from "@/lib/auth";
 import { useSquad } from "@/features/solver/api/get-squad";
+import { useOptimizeSquad } from "@/features/solver/api/optimize-squad";
+import { useNavigation } from "@/hooks/use-navigation";
 
 const SolverPage = () => {
   const queryClient = useQueryClient();
+  const { goToSolver } = useNavigation();
   const { data: user, isLoading: isUserLoading } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [teamId, setTeamId] = useState(user?.squad_id || null);
   const [hasSquadId, setHasSquadId] = useState(!!user?.squad_id);
+  const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { data: squadData, isLoading: isSquadLoading } = useSquad(
     teamId || undefined,
@@ -24,6 +30,36 @@ const SolverPage = () => {
       },
     },
   );
+
+  const optimizeSquadMutation = useOptimizeSquad({
+    onSuccess: (data) => {
+      console.log("Optimized Squad:", data);
+      setIsLoadingModalOpen(false);
+      setErrorMessage("");
+    },
+    onError: (error) => {
+      console.error("Optimization Error:", error.message);
+      const message =
+        error.message ===
+        "Optimization failed, probably due to unfeasible constraints"
+          ? "Nie można spełnić wymagań."
+          : "Wystąpił błąd podczas optymalizacji. Sprawdź czy podałeś spełnialne ograniczenia i spróbuj ponownie.";
+      setErrorMessage(message);
+      setIsLoadingModalOpen(true);
+    },
+  });
+
+  const handleSolverFormSubmit = (data) => {
+    console.log("Form Data Submitted:", data);
+    setIsLoadingModalOpen(true);
+    optimizeSquadMutation.mutate(data);
+  };
+
+  const handleCloseModal = () => {
+    setIsLoadingModalOpen(false);
+    setErrorMessage("");
+    goToSolver();
+  };
 
   useEffect(() => {
     if (!isUserLoading && !hasSquadId) {
@@ -96,12 +132,18 @@ const SolverPage = () => {
             )}
             teamId={teamId}
             teamName={squadData?.name}
-            onSubmit={(data) => console.log("Form Submitted:", data)}
+            onSubmit={handleSolverFormSubmit}
           />
         </Box>
       </Flex>
 
       <TeamModal isOpen={isModalOpen} onSubmit={handleSubmitTeamId} />
+      <LoadingModal
+        isOpen={isLoadingModalOpen}
+        text="Trwa optymalizacja składu..."
+        error={errorMessage}
+        onClose={handleCloseModal}
+      />
     </Box>
   );
 };
