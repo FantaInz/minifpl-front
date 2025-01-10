@@ -39,7 +39,7 @@ const Pitch = ({ players, gameweek, displayMode }) => {
   };
 
   const renderRow = (playersRow) => (
-    <Flex justify="center" wrap="wrap" gap={2} mb={3}>
+    <Flex justify="center" wrap="wrap" gap={[1, 2]} mb={[4, 12]}>
       {playersRow.map((player) => {
         const displayPoints = getDisplayPoints(player);
 
@@ -60,7 +60,7 @@ const Pitch = ({ players, gameweek, displayMode }) => {
       position="relative"
       mx="auto"
       p={4}
-      maxW="500px"
+      maxW="580px"
       aspectRatio="2 / 3"
       bgImage="url(/src/assets/Football_field.svg)"
       bgSize="contain"
@@ -73,7 +73,7 @@ const Pitch = ({ players, gameweek, displayMode }) => {
       {mid.length > 0 && <>{renderRow(mid)}</>}
       {fwd.length > 0 && <>{renderRow(fwd)}</>}
       <Box bg="blue.200" mt={[12, 14]} borderRadius="md" p={[0, 5]}>
-        <Flex justify="center" wrap="wrap" gap={2}>
+        <Flex justify="center" wrap="wrap" gap={[3, 8]}>
           {benchPlayers.map((player) => {
             const displayPoints = getDisplayPoints(player);
 

@@ -2,16 +2,15 @@ import React from "react";
 import {
   Box,
   Heading,
-  Text,
   Spinner,
   Stack,
   HStack,
   Flex,
+  Text,
   createListCollection,
 } from "@chakra-ui/react";
 import { useMyPlans } from "@/features/plans/api/get-my-plans";
 import { usePlan } from "@/features/plans/api/get-plan";
-
 import {
   SelectContent,
   SelectItem,
@@ -21,12 +20,24 @@ import {
 } from "@/components/ui/select";
 import { RadioCardItem, RadioCardRoot } from "@/components/ui/radio-card";
 import PlanDetailsAccordion from "@/components/ui/plan-details-accordion";
+import Pitch from "@/components/ui/pitch";
+import { useNavigation } from "@/hooks/use-navigation";
+import { Button } from "@/components/ui/button";
+import { useUser } from "@/lib/auth";
 
 const PlansPage = () => {
+  const { goToSolver } = useNavigation();
+  const { data: user, isLoading: isUserLoading } = useUser();
   const { data: plans, isLoading: isLoadingPlans } = useMyPlans();
 
   const [selectedPlanId, setSelectedPlanId] = React.useState(null);
   const [plansCollection, setPlansCollection] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!isUserLoading && !user?.squad_id) {
+      goToSolver();
+    }
+  }, [isUserLoading, user, goToSolver]);
 
   React.useEffect(() => {
     if (plans && plans.length > 0) {
@@ -39,7 +50,6 @@ const PlansPage = () => {
         })),
       });
       setPlansCollection(collection);
-      console.log(plansCollection);
     }
   }, [plans]);
 
@@ -65,13 +75,43 @@ const PlansPage = () => {
 
   const [selectedGameweek, setSelectedGameweek] = React.useState(null);
 
+  const processedPlayers =
+    planDetails && selectedGameweek
+      ? (() => {
+          const currentSquad =
+            planDetails.squads[selectedGameweek - planDetails.start_gameweek];
+          const reversedSubs = [...currentSquad.subs].reverse();
+          const sortedSubs =
+            reversedSubs.length > 0
+              ? [
+                  reversedSubs[0],
+                  ...reversedSubs
+                    .slice(1)
+                    .sort(
+                      (a, b) =>
+                        b.expectedPoints[selectedGameweek - 1] -
+                        a.expectedPoints[selectedGameweek - 1],
+                    ),
+                ]
+              : [];
+
+          const players = [...currentSquad.team, ...sortedSubs];
+          return players.map((player) => ({
+            ...player,
+            expectedPoints: player.expectedPoints.map((point) =>
+              Number(parseFloat(point).toFixed(2)),
+            ),
+          }));
+        })()
+      : [];
+
   React.useEffect(() => {
     if (gameweeks.length > 0 && selectedGameweek === null) {
       setSelectedGameweek(gameweeks[0].value);
     }
   }, [gameweeks, selectedGameweek]);
 
-  if (isLoadingPlans) {
+  if (isLoadingPlans || isLoadingPlan) {
     return (
       <Flex
         height="100vh"
@@ -80,6 +120,34 @@ const PlansPage = () => {
         flexDirection="column"
       >
         <Spinner size="xl" role="status" />
+        <Text mt={4}>Ładowanie danych...</Text>
+      </Flex>
+    );
+  }
+
+  if (!plans || plans.length === 0) {
+    return (
+      <Flex
+        height="100vh"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+        textAlign="center"
+      >
+        <Heading size="2xl" mb={4}>
+          Nie znaleziono planów
+        </Heading>
+        <Text fontSize="lg" color="gray.500">
+          Wygląda na to, że nie masz żadnych zapisanych planów.
+        </Text>
+        <Button
+          mt={6}
+          colorPalette="blue"
+          size="xl"
+          onClick={() => goToSolver()}
+        >
+          Przejdź do solvera
+        </Button>
       </Flex>
     );
   }
@@ -92,7 +160,7 @@ const PlansPage = () => {
         md: "row",
       }}
     >
-      <Box flex="1" p={4} bg="gray.50">
+      <Box flex="1" p={4}>
         {gameweeks.length > 0 && selectedGameweek !== null && (
           <Stack gap="4">
             <Heading size="2xl" mx="auto">
@@ -122,6 +190,15 @@ const PlansPage = () => {
               </HStack>
             </RadioCardRoot>
           </Stack>
+        )}
+        {processedPlayers.length > 0 && (
+          <Box mt={6}>
+            <Pitch
+              players={processedPlayers}
+              gameweek={parseInt(selectedGameweek, 10)}
+              displayMode="both"
+            />
+          </Box>
         )}
       </Box>
 
@@ -155,19 +232,7 @@ const PlansPage = () => {
           <Text mt={4}>Ładowanie listy planów...</Text>
         )}
 
-        {isLoadingPlan ? (
-          <Flex
-            height="100vh"
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-          >
-            <Spinner size="xl" role="status" />
-            <Text mt={4}>Ładowanie szczegółów planu...</Text>
-          </Flex>
-        ) : (
-          planDetails && <PlanDetailsAccordion planDetails={planDetails} />
-        )}
+        {planDetails && <PlanDetailsAccordion planDetails={planDetails} />}
       </Box>
     </Flex>
   );

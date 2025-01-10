@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Spinner, Flex, Heading } from "@chakra-ui/react";
+import { Box, Spinner, Flex, Heading, Text } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import TeamModal from "@/features/solver/team-modal";
@@ -37,7 +37,7 @@ const SolverPage = () => {
   const { mutate: savePlan } = useSavePlan({
     onSuccess: (data) => {
       console.log("Plan zapisany:", data);
-      queryClient.invalidateQueries(["myPlans"]);
+      queryClient.invalidateQueries({ queryKey: ["myPlans"] });
       setIsLoadingModalOpen(false);
       setErrorMessage("");
       setSavedPlanName("");
@@ -103,14 +103,15 @@ const SolverPage = () => {
 
   if (isUserLoading || isSquadLoading) {
     return (
-      <Box
+      <Flex
         height="100vh"
-        display="flex"
         alignItems="center"
         justifyContent="center"
+        flexDirection="column"
       >
         <Spinner size="xl" role="status" />
-      </Box>
+        <Text mt={4}>Pobieranie danych o składzie...</Text>
+      </Flex>
     );
   }
 
@@ -124,36 +125,42 @@ const SolverPage = () => {
 
   return (
     <Box>
-      <Flex
-        height="100%"
-        flexDirection={{
-          base: "column",
-          xl: "row",
-        }}
-      >
-        <Box flex="1" p={4} order={[2, 1]}>
-          <Heading size="4xl" mb={4} textAlign="center">
-            Twój Skład w GW{squadData?.lastUpdate}
-          </Heading>
+      {user?.squad_id ? (
+        <Flex
+          height="100%"
+          flexDirection={{
+            base: "column",
+            xl: "row",
+          }}
+        >
+          <Box flex="1" p={4} order={[2, 1]}>
+            <Heading size="4xl" mb={4} textAlign="center">
+              Twój Skład w GW{squadData?.lastUpdate}
+            </Heading>
 
-          <Pitch
-            players={processedPlayers}
-            gameweek={squadData?.lastUpdate}
-            displayMode="actual"
-          />
-        </Box>
-        <Box flex="1" p={4} order={[1, 2]} mt={[0, 14]}>
-          <SolverForm
-            freeTransfers={squadData?.freeTransfers}
-            budget={Number(
-              parseFloat(squadData?.transferBudget / 10).toFixed(1),
-            )}
-            teamId={teamId}
-            teamName={squadData?.name}
-            onSubmit={handleSolverFormSubmit}
-          />
-        </Box>
-      </Flex>
+            <Pitch
+              players={processedPlayers}
+              gameweek={squadData?.lastUpdate}
+              displayMode="actual"
+            />
+          </Box>
+          <Box flex="1" p={4} order={[1, 2]} mt={[0, 14]}>
+            <SolverForm
+              freeTransfers={squadData?.freeTransfers}
+              budget={Number(
+                parseFloat(squadData?.transferBudget / 10).toFixed(1),
+              )}
+              teamId={teamId}
+              teamName={squadData?.name}
+              onSubmit={handleSolverFormSubmit}
+            />
+          </Box>
+        </Flex>
+      ) : (
+        <Text textAlign="center" fontSize="2xl" mt={6}>
+          Brak danych o składzie.
+        </Text>
+      )}
 
       <TeamModal isOpen={isModalOpen} onSubmit={handleSubmitTeamId} />
       <LoadingModal
