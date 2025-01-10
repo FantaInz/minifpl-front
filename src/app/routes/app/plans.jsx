@@ -43,12 +43,18 @@ const PlansPage = () => {
     if (plans && plans.length > 0) {
       const highestId = Math.max(...plans.map((plan) => plan.id));
       setSelectedPlanId(highestId.toString());
+
       const collection = createListCollection({
         items: plans.map((plan) => ({
-          label: plan.name,
+          label: `${plan.name} ${
+            plan.start_gameweek === plan.end_gameweek
+              ? `(${plan.start_gameweek})`
+              : `(${plan.start_gameweek}-${plan.end_gameweek})`
+          }`,
           value: plan.id.toString(),
         })),
       });
+
       setPlansCollection(collection);
     }
   }, [plans]);
@@ -185,6 +191,7 @@ const PlansPage = () => {
                     borderRadius="md"
                     shadow="lg"
                     cursor="pointer"
+                    justifyContent="center"
                   />
                 ))}
               </HStack>

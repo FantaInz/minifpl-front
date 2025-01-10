@@ -3,6 +3,7 @@ import qs from "qs";
 
 import { env } from "@/config/env";
 import { storage } from "@/utils/storage";
+import { paths } from "@/config/paths";
 
 function authRequestInterceptor(config) {
   if (config.headers) {
@@ -45,6 +46,7 @@ api.interceptors.response.use(
     const status = error.response?.status;
     const requestUrl = error.config?.url || "";
     const detail = error.response?.data?.detail || "";
+    console.log(detail);
 
     if (
       requestUrl.includes("/api/auth/login") ||
@@ -59,6 +61,7 @@ api.interceptors.response.use(
       if (token) {
         storage.clearToken();
       }
+      window.location.href = paths.auth.main.getHref();
     }
 
     return Promise.reject(error);

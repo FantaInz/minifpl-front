@@ -135,7 +135,7 @@ const SolverPage = () => {
         >
           <Box flex="1" p={4} order={[2, 1]}>
             <Heading size="4xl" mb={4} textAlign="center">
-              Twój Skład w GW{squadData?.lastUpdate}
+              Twój skład w {squadData?.lastUpdate} kolejce
             </Heading>
 
             <Pitch
