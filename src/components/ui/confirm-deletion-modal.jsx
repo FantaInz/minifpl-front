@@ -17,12 +17,18 @@ import { Button } from "./button";
 
 const ConfirmDeletionModal = ({ onConfirm, title }) => {
   const [open, setOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm();
+  const handleConfirm = async () => {
+    setIsLoading(true);
+    try {
+      if (onConfirm) {
+        await onConfirm();
+      }
+      setOpen(false);
+    } finally {
+      setIsLoading(false);
     }
-    setOpen(false);
   };
 
   return (
@@ -30,7 +36,7 @@ const ConfirmDeletionModal = ({ onConfirm, title }) => {
       modal
       centered
       motionPreset="scale"
-      closeOnInteractOutside={false}
+      closeOnInteractOutside={!isLoading}
       open={open}
       onOpenChange={(e) => setOpen(e.open)}
     >
@@ -49,15 +55,23 @@ const ConfirmDeletionModal = ({ onConfirm, title }) => {
         </DialogBody>
         <DialogFooter justifyContent="center">
           <DialogActionTrigger asChild>
-            <Button onClick={() => setOpen(false)} variant="outline">
+            <Button
+              onClick={() => setOpen(false)}
+              variant="outline"
+              loading={isLoading}
+            >
               Anuluj
             </Button>
           </DialogActionTrigger>
-          <Button colorPalette="red" onClick={handleConfirm}>
+          <Button
+            colorPalette="red"
+            onClick={handleConfirm}
+            loading={isLoading}
+          >
             Usuń
           </Button>
         </DialogFooter>
-        <DialogCloseTrigger />
+        {!isLoading && <DialogCloseTrigger />}
       </DialogContent>
     </DialogRoot>
   );

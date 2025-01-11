@@ -9,8 +9,11 @@ import {
   Text,
   createListCollection,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { useMyPlans } from "@/features/plans/api/get-my-plans";
 import { usePlan } from "@/features/plans/api/get-plan";
+import { useDeletePlan } from "@/features/plans/api/delete-plan";
 import {
   SelectContent,
   SelectItem,
@@ -25,11 +28,14 @@ import ConfirmDeletionModal from "@/components/ui/confirm-deletion-modal";
 import { useNavigation } from "@/hooks/use-navigation";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/lib/auth";
+import { toaster } from "@/components/ui/toaster";
 
 const PlansPage = () => {
   const { goToSolver } = useNavigation();
   const { data: user, isLoading: isUserLoading } = useUser();
   const { data: plans, isLoading: isLoadingPlans } = useMyPlans();
+  const deletePlanMutation = useDeletePlan();
+  const queryClient = useQueryClient();
 
   const [selectedPlanId, setSelectedPlanId] = React.useState(null);
   const [plansCollection, setPlansCollection] = React.useState(null);
@@ -60,10 +66,70 @@ const PlansPage = () => {
     }
   }, [plans]);
 
+  const [pendingDeleteTitle, setPendingDeleteTitle] = React.useState(null);
+
+  const handleDeletePlan = async () => {
+    if (selectedPlanId) {
+      try {
+        const oldId = selectedPlanId;
+
+        const titleToDelete = plansCollection?.items.find(
+          (item) => item.value === oldId,
+        )?.label;
+
+        setPendingDeleteTitle(titleToDelete);
+
+        const remainingPlans = plans.filter(
+          (plan) => plan.id.toString() !== oldId,
+        );
+        const updatedCollection = createListCollection({
+          items: remainingPlans.map((plan) => ({
+            label: `${plan.name} ${
+              plan.start_gameweek === plan.end_gameweek
+                ? `(${plan.start_gameweek})`
+                : `(${plan.start_gameweek}-${plan.end_gameweek})`
+            }`,
+            value: plan.id.toString(),
+          })),
+        });
+        setPlansCollection(updatedCollection);
+
+        setSelectedPlanId(
+          remainingPlans.length > 0 ? remainingPlans[0].id.toString() : null,
+        );
+
+        await deletePlanMutation.mutateAsync(oldId);
+
+        await Promise.all([
+          queryClient.removeQueries({
+            queryKey: ["plan", oldId],
+          }),
+          queryClient.invalidateQueries({ queryKey: ["myPlans"] }),
+        ]);
+
+        console.log(`Plan o ID ${oldId} został usunięty!`);
+
+        toaster.create({
+          title: "Plan usunięty.",
+          type: "success",
+        });
+      } catch {
+        toaster.create({
+          title: "Błąd podczas usuwania planu.",
+          type: "error",
+        });
+      } finally {
+        setPendingDeleteTitle(null);
+      }
+    }
+  };
+
   const { data: planDetails, isLoading: isLoadingPlan } = usePlan(
     selectedPlanId,
     {
-      enabled: !!selectedPlanId,
+      enabled:
+        !!selectedPlanId &&
+        plans.some((plan) => plan.id.toString() === selectedPlanId),
     },
   );
 
@@ -81,10 +147,6 @@ const PlansPage = () => {
       : [];
 
   const [selectedGameweek, setSelectedGameweek] = React.useState(null);
-
-  const handleDeletePlan = () => {
-    console.log(`Plan o ID ${selectedPlanId} został usunięty!`);
-  };
 
   const processedPlayers =
     planDetails && selectedGameweek
@@ -243,9 +305,11 @@ const PlansPage = () => {
             <ConfirmDeletionModal
               onConfirm={handleDeletePlan}
               title={
+                pendingDeleteTitle ||
                 plansCollection?.items.find(
                   (item) => item.value === selectedPlanId,
-                )?.label || "Plan"
+                )?.label ||
+                "Plan"
               }
             />
           </Flex>

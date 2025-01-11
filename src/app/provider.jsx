@@ -9,10 +9,12 @@ import { AuthLoader } from "@/lib/auth";
 import { queryClient } from "@/lib/react-query";
 import { Provider } from "@/components/ui/provider";
 import { Loading } from "@/components/ui/loading";
+import { Toaster } from "@/components/ui/toaster";
 
 export const AppProvider = ({ children }) => {
   return (
     <Provider>
+      <Toaster />
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
         <React.Suspense fallback={<Loading />}>
           <QueryClientProvider client={queryClient}>
