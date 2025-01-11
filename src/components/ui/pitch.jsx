@@ -12,36 +12,28 @@ function groupPlayersByPosition(players) {
   return { gk, def, mid, fwd };
 }
 
+const getDisplayPoints = (player, gameweek, displayMode) => {
+  const { points, expectedPoints } = player;
+  const lastPoints = points[gameweek - 1];
+  const futurePoints = expectedPoints[gameweek - 1];
+
+  return {
+    actual: displayMode === "both" ? lastPoints : points[points.length - 1],
+    expected: futurePoints,
+    mode: displayMode,
+  };
+};
+
 const Pitch = ({ players, gameweek, displayMode }) => {
   const benchPlayers = players.slice(-4);
   const mainPlayers = players.slice(0, players.length - 4);
 
   const { gk, def, mid, fwd } = groupPlayersByPosition(mainPlayers);
 
-  const getDisplayPoints = (player) => {
-    const { points, expectedPoints } = player;
-    const lastPoints = points[gameweek - 1];
-    const futurePoints = expectedPoints[gameweek - 1];
-
-    switch (displayMode) {
-      case "actual":
-        return lastPoints ?? points[points.length - 1];
-      case "expected":
-        return futurePoints;
-      case "both":
-        if (lastPoints !== null && lastPoints !== undefined) {
-          return `${lastPoints} / ${futurePoints}`;
-        }
-        return futurePoints;
-      default:
-        return lastPoints ?? points[points.length - 1];
-    }
-  };
-
   const renderRow = (playersRow) => (
     <Flex justify="center" wrap="wrap" gap={[1, 2]} mb={[4, 12]}>
       {playersRow.map((player) => {
-        const displayPoints = getDisplayPoints(player);
+        const displayPoints = getDisplayPoints(player, gameweek, displayMode);
 
         return (
           <Player
@@ -76,7 +68,11 @@ const Pitch = ({ players, gameweek, displayMode }) => {
         <Box bg="blue.200" mt={[12, 14]} borderRadius="md" p={[0, 5]}>
           <Flex justify="center" wrap="wrap" gap={[3, 8]}>
             {benchPlayers.map((player) => {
-              const displayPoints = getDisplayPoints(player);
+              const displayPoints = getDisplayPoints(
+                player,
+                gameweek,
+                displayMode,
+              );
 
               return (
                 <Player
