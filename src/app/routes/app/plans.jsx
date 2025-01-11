@@ -216,12 +216,7 @@ const PlansPage = () => {
 
       <Box flex="1" p={4}>
         {plansCollection ? (
-          <Flex
-            justifyContent="center"
-            alignItems="center"
-            gap={4} // Odstęp między elementami
-            mb={6} // Margines dolny dla całego kontenera
-          >
+          <Flex justifyContent="center" alignItems="center" gap={4} mb={6}>
             <SelectRoot
               collection={plansCollection}
               size="lg"
@@ -248,8 +243,9 @@ const PlansPage = () => {
             <ConfirmDeletionModal
               onConfirm={handleDeletePlan}
               title={
-                plans.find((plan) => plan.id.toString() === selectedPlanId)
-                  ?.name || "Plan"
+                plansCollection?.items.find(
+                  (item) => item.value === selectedPlanId,
+                )?.label || "Plan"
               }
             />
           </Flex>
