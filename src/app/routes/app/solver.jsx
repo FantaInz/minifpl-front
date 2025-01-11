@@ -35,13 +35,19 @@ const SolverPage = () => {
   );
 
   const { mutate: savePlan } = useSavePlan({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Plan zapisany:", data);
-      queryClient.invalidateQueries({ queryKey: ["myPlans"] });
-      setIsLoadingModalOpen(false);
-      setErrorMessage("");
-      setSavedPlanName("");
-      goToPlans();
+      try {
+        await queryClient.invalidateQueries({ queryKey: ["myPlans"] });
+        setIsLoadingModalOpen(false);
+        setErrorMessage("");
+        setSavedPlanName("");
+        goToPlans();
+      } catch (error) {
+        console.error("Błąd podczas odświeżania planów:", error.message);
+        setErrorMessage("Nie udało się odświeżyć planów.");
+        setIsLoadingModalOpen(false);
+      }
     },
     onError: (error) => {
       console.error("Błąd zapisywania planu:", error.message);
