@@ -1,10 +1,7 @@
 import React from "react";
 import {
   Box,
-  Heading,
   Spinner,
-  Stack,
-  HStack,
   Flex,
   Text,
   createListCollection,
@@ -14,31 +11,30 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useMyPlans } from "@/features/plans/api/get-my-plans";
 import { usePlan } from "@/features/plans/api/get-plan";
 import { useDeletePlan } from "@/features/plans/api/delete-plan";
-import {
-  SelectContent,
-  SelectItem,
-  SelectRoot,
-  SelectTrigger,
-  SelectValueText,
-} from "@/components/ui/select";
-import { RadioCardItem, RadioCardRoot } from "@/components/ui/radio-card";
 import PlanDetailsAccordion from "@/components/ui/plan-details-accordion";
+import PlanSelector from "@/components/ui/plan-selector";
+import NoPlansMessage from "@/components/ui/no-plans-message";
 import Pitch from "@/components/ui/pitch";
 import ConfirmDeletionModal from "@/components/ui/confirm-deletion-modal";
 import { useNavigation } from "@/hooks/use-navigation";
-import { Button } from "@/components/ui/button";
 import { useUser } from "@/lib/auth";
 import { toaster } from "@/components/ui/toaster";
+import GameweekSelector from "@/components/ui/gameweek-selector";
+import useProcessedPlayers from "@/hooks/use-processed-players";
+import { useGameweeks } from "@/hooks/plan-hooks";
 
 const PlansPage = () => {
   const { goToSolver } = useNavigation();
   const { data: user, isLoading: isUserLoading } = useUser();
   const { data: plans, isLoading: isLoadingPlans } = useMyPlans();
+
   const deletePlanMutation = useDeletePlan();
   const queryClient = useQueryClient();
 
   const [selectedPlanId, setSelectedPlanId] = React.useState(null);
   const [plansCollection, setPlansCollection] = React.useState(null);
+  const [selectedGameweek, setSelectedGameweek] = React.useState(null);
+  const [pendingDeleteTitle, setPendingDeleteTitle] = React.useState(null);
 
   React.useEffect(() => {
     if (!isUserLoading && !user?.squad_id) {
@@ -65,8 +61,6 @@ const PlansPage = () => {
       setPlansCollection(collection);
     }
   }, [plans]);
-
-  const [pendingDeleteTitle, setPendingDeleteTitle] = React.useState(null);
 
   const handleDeletePlan = async () => {
     if (selectedPlanId) {
@@ -133,50 +127,7 @@ const PlansPage = () => {
     },
   );
 
-  const gameweeks =
-    planDetails && planDetails.start_gameweek && planDetails.end_gameweek
-      ? Array.from(
-          {
-            length: planDetails.end_gameweek - planDetails.start_gameweek + 1,
-          },
-          (_, i) => {
-            const gw = planDetails.start_gameweek + i;
-            return { value: gw.toString(), label: gw.toString() };
-          },
-        )
-      : [];
-
-  const [selectedGameweek, setSelectedGameweek] = React.useState(null);
-
-  const processedPlayers =
-    planDetails && selectedGameweek
-      ? (() => {
-          const currentSquad =
-            planDetails.squads[selectedGameweek - planDetails.start_gameweek];
-          const reversedSubs = [...currentSquad.subs].reverse();
-          const sortedSubs =
-            reversedSubs.length > 0
-              ? [
-                  reversedSubs[0],
-                  ...reversedSubs
-                    .slice(1)
-                    .sort(
-                      (a, b) =>
-                        b.expectedPoints[selectedGameweek - 1] -
-                        a.expectedPoints[selectedGameweek - 1],
-                    ),
-                ]
-              : [];
-
-          const players = [...currentSquad.team, ...sortedSubs];
-          return players.map((player) => ({
-            ...player,
-            expectedPoints: player.expectedPoints.map((point) =>
-              Number(parseFloat(point).toFixed(2)),
-            ),
-          }));
-        })()
-      : [];
+  const gameweeks = useGameweeks(planDetails);
 
   React.useEffect(() => {
     if (gameweeks.length > 0 && selectedGameweek === null) {
@@ -199,31 +150,10 @@ const PlansPage = () => {
   }
 
   if (!plans || plans.length === 0) {
-    return (
-      <Flex
-        height="100vh"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-        textAlign="center"
-      >
-        <Heading size="2xl" mb={4}>
-          Nie znaleziono planów
-        </Heading>
-        <Text fontSize="lg" color="gray.500">
-          Wygląda na to, że nie masz żadnych zapisanych planów.
-        </Text>
-        <Button
-          mt={6}
-          colorPalette="blue"
-          size="xl"
-          onClick={() => goToSolver()}
-        >
-          Przejdź do solvera
-        </Button>
-      </Flex>
-    );
+    return <NoPlansMessage onNavigateToSolver={goToSolver} />;
   }
+
+  const processedPlayers = useProcessedPlayers(planDetails, selectedGameweek);
 
   return (
     <Flex
@@ -235,35 +165,11 @@ const PlansPage = () => {
     >
       <Box flex="1" p={4}>
         {gameweeks.length > 0 && selectedGameweek !== null && (
-          <Stack gap="4">
-            <Heading size="2xl" mx="auto">
-              Wybierz kolejkę
-            </Heading>
-            <RadioCardRoot
-              align="center"
-              margin="auto"
-              defaultValue={selectedGameweek?.toString()}
-              onValueChange={(e) => setSelectedGameweek(e.value)}
-            >
-              <HStack align="stretch">
-                {gameweeks.map((gw) => (
-                  <RadioCardItem
-                    key={gw.value}
-                    value={gw.value}
-                    label={gw.label}
-                    maxW="50px"
-                    maxH="50px"
-                    bg="white"
-                    indicator={false}
-                    borderRadius="md"
-                    shadow="lg"
-                    cursor="pointer"
-                    justifyContent="center"
-                  />
-                ))}
-              </HStack>
-            </RadioCardRoot>
-          </Stack>
+          <GameweekSelector
+            gameweeks={gameweeks}
+            selectedGameweek={selectedGameweek}
+            onChange={setSelectedGameweek}
+          />
         )}
         {processedPlayers.length > 0 && (
           <Box mt={6}>
@@ -279,29 +185,11 @@ const PlansPage = () => {
       <Box flex="1" p={4}>
         {plansCollection ? (
           <Flex justifyContent="center" alignItems="center" gap={4} mb={6}>
-            <SelectRoot
-              collection={plansCollection}
-              size="lg"
-              bg="white"
-              width={{ base: "70%", md: "40%" }}
-              borderRadius="md"
-              shadow="lg"
-              value={[selectedPlanId]}
-              onValueChange={(e) => {
-                setSelectedPlanId(e.value[0]);
-              }}
-            >
-              <SelectTrigger>
-                <SelectValueText placeholder="Wybierz plan" />
-              </SelectTrigger>
-              <SelectContent>
-                {plansCollection.items.map((plan) => (
-                  <SelectItem item={plan} key={plan.value}>
-                    {plan.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </SelectRoot>
+            <PlanSelector
+              plansCollection={plansCollection}
+              selectedPlanId={selectedPlanId}
+              setSelectedPlanId={setSelectedPlanId}
+            />
             <ConfirmDeletionModal
               onConfirm={handleDeletePlan}
               title={
