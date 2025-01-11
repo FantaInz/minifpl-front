@@ -21,6 +21,7 @@ import {
 import { RadioCardItem, RadioCardRoot } from "@/components/ui/radio-card";
 import PlanDetailsAccordion from "@/components/ui/plan-details-accordion";
 import Pitch from "@/components/ui/pitch";
+import ConfirmDeletionModal from "@/components/ui/confirm-deletion-modal";
 import { useNavigation } from "@/hooks/use-navigation";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/lib/auth";
@@ -80,6 +81,10 @@ const PlansPage = () => {
       : [];
 
   const [selectedGameweek, setSelectedGameweek] = React.useState(null);
+
+  const handleDeletePlan = () => {
+    console.log(`Plan o ID ${selectedPlanId} został usunięty!`);
+  };
 
   const processedPlayers =
     planDetails && selectedGameweek
@@ -211,30 +216,43 @@ const PlansPage = () => {
 
       <Box flex="1" p={4}>
         {plansCollection ? (
-          <SelectRoot
-            collection={plansCollection}
-            size="lg"
-            bg="white"
-            width={{ base: "80%", md: "40%" }}
-            borderRadius="md"
-            shadow="lg"
-            margin="auto"
-            value={[selectedPlanId]}
-            onValueChange={(e) => {
-              setSelectedPlanId(e.value[0]);
-            }}
+          <Flex
+            justifyContent="center"
+            alignItems="center"
+            gap={4} // Odstęp między elementami
+            mb={6} // Margines dolny dla całego kontenera
           >
-            <SelectTrigger>
-              <SelectValueText placeholder="Wybierz plan" />
-            </SelectTrigger>
-            <SelectContent>
-              {plansCollection.items.map((plan) => (
-                <SelectItem item={plan} key={plan.value}>
-                  {plan.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </SelectRoot>
+            <SelectRoot
+              collection={plansCollection}
+              size="lg"
+              bg="white"
+              width={{ base: "70%", md: "40%" }}
+              borderRadius="md"
+              shadow="lg"
+              value={[selectedPlanId]}
+              onValueChange={(e) => {
+                setSelectedPlanId(e.value[0]);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValueText placeholder="Wybierz plan" />
+              </SelectTrigger>
+              <SelectContent>
+                {plansCollection.items.map((plan) => (
+                  <SelectItem item={plan} key={plan.value}>
+                    {plan.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </SelectRoot>
+            <ConfirmDeletionModal
+              onConfirm={handleDeletePlan}
+              title={
+                plans.find((plan) => plan.id.toString() === selectedPlanId)
+                  ?.name || "Plan"
+              }
+            />
+          </Flex>
         ) : (
           <Text mt={4}>Ładowanie listy planów...</Text>
         )}
