@@ -72,22 +72,24 @@ const Pitch = ({ players, gameweek, displayMode }) => {
       {def.length > 0 && <>{renderRow(def)}</>}
       {mid.length > 0 && <>{renderRow(mid)}</>}
       {fwd.length > 0 && <>{renderRow(fwd)}</>}
-      <Box bg="blue.200" mt={[12, 14]} borderRadius="md" p={[0, 5]}>
-        <Flex justify="center" wrap="wrap" gap={[3, 8]}>
-          {benchPlayers.map((player) => {
-            const displayPoints = getDisplayPoints(player);
+      {benchPlayers.length > 0 && (
+        <Box bg="blue.200" mt={[12, 14]} borderRadius="md" p={[0, 5]}>
+          <Flex justify="center" wrap="wrap" gap={[3, 8]}>
+            {benchPlayers.map((player) => {
+              const displayPoints = getDisplayPoints(player);
 
-            return (
-              <Player
-                key={player.id}
-                name={player.name}
-                club_id={player.team.id}
-                points={displayPoints}
-              />
-            );
-          })}
-        </Flex>
-      </Box>
+              return (
+                <Player
+                  key={player.id}
+                  name={player.name}
+                  club_id={player.team.id}
+                  points={displayPoints}
+                />
+              );
+            })}
+          </Flex>
+        </Box>
+      )}
     </Box>
   );
 };
