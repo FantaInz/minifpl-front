@@ -24,18 +24,21 @@ export const getUser = async () => {
 };
 
 export const login = async (data) => {
-  const formData = {
-    grant_type: "password",
-    username: data.username,
-    password: data.password,
-    scope: "",
-    client_id: "string",
-    client_secret: "string",
-  };
+  if (data.username) {
+    const formData = {
+      grant_type: "password",
+      username: data.username,
+      password: data.password,
+      scope: "",
+      client_id: "string",
+      client_secret: "string",
+    };
 
-  const response = await api.post("/api/auth/login", formData);
-
-  storage.setToken(response.access_token);
+    const response = await api.post("/api/auth/login", formData);
+    storage.setToken(response.access_token);
+  } else {
+    storage.setToken(data.access_token);
+  }
   return getUser();
 };
 

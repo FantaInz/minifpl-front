@@ -46,7 +46,23 @@ const LoginForm = () => {
   useEffect(() => {
     async function fetchData(code) {
       const token = await api.get("/api/google/auth?code=" + code);
-      console.log(token.access_token);
+      console.error(token.username);
+      login(token, {
+        onSuccess: () => {
+          console.log("Zalogowano pomyślnie!");
+          goToSolver();
+        },
+        onError: (error) => {
+          const translatedError = translateError(
+            error.response?.data?.detail || error.message,
+          );
+          console.error("Błąd logowania:", translatedError);
+          setLoginError(translatedError);
+        },
+        onSettled: () => {
+          setIsLoggingInLocal(false);
+        },
+      });
     }
     let code = searchParams.get("code");
     if (code) {
