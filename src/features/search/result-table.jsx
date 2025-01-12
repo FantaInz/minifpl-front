@@ -74,7 +74,7 @@ const ResultTable = ({ startGameweek, endGameweek, players }) => {
                 <Table.Cell>
                   {positionMap[player.position] || player.position}
                 </Table.Cell>
-                <Table.Cell>{(player.price / 10).toFixed(1)}</Table.Cell>{" "}
+                <Table.Cell>{(player.price / 10).toFixed(1)}</Table.Cell>
                 {renderPointsCells(player)}
               </Table.Row>
             ))
@@ -100,7 +100,7 @@ ResultTable.propTypes = {
         name: PropTypes.string.isRequired,
       }).isRequired,
       position: PropTypes.string.isRequired,
-      expectedPoints: PropTypes.arrayOf(PropTypes.number),
+      expectedPoints: PropTypes.arrayOf(PropTypes.string),
       points: PropTypes.arrayOf(PropTypes.number),
     }),
   ).isRequired,
