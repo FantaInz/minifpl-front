@@ -5,6 +5,7 @@ import LoginForm from "./login-form";
 import RegisterForm from "./register-form";
 import Logo from "@/components/ui/logo";
 import LogoutModal from "./logout-modal";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 import { useUser, useLogout } from "@/lib/auth";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -48,8 +49,14 @@ const AuthTabs = () => {
       bg="white"
       width={["90%", "400px"]}
     >
-      <Box display="flex" justifyContent="center" mb={6}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={6}
+      >
         <Logo size="2xl" />
+        <LanguageSwitcher />
       </Box>
 
       <Tabs.Root

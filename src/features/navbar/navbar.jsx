@@ -15,6 +15,7 @@ import NavLinkItem from "./nav-link-item";
 import { CloseButton } from "@/components/ui/close-button";
 import { LogoutButton } from "@/components/ui/logout-button";
 import Logo from "@/components/ui/logo";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 import { paths } from "@/config/paths";
 import { useLogout } from "@/lib/auth";
 import { Collapsible } from "@chakra-ui/react";
@@ -62,7 +63,12 @@ const NavBar = () => {
           ))}
         </HStack>
 
-        <Flex alignItems="center" display={{ base: "none", md: "flex" }}>
+        <Flex
+          alignItems="center"
+          display={{ base: "none", md: "flex" }}
+          gap={4}
+        >
+          <LanguageSwitcher />
           <LogoutButton onClick={handleLogout} />
         </Flex>
 
@@ -85,6 +91,9 @@ const NavBar = () => {
       <Collapsible.Root open={isOpen && isMobile}>
         <Collapsible.Content>
           <Stack bg="white" p={4} spacing={4}>
+            <Box pt={4} width="100%" display="flex" justifyContent="center">
+              <LanguageSwitcher />
+            </Box>
             <NavLinkItem
               to={paths.app.solver.path}
               data-testid="nav-solver-mobile"
