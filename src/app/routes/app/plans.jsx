@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Spinner,
-  Flex,
-  Text,
-  createListCollection,
-} from "@chakra-ui/react";
+import { Box, Spinner, Flex, Text } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { useMyPlans } from "@/features/plans/api/get-my-plans";
@@ -47,18 +41,16 @@ const PlansPage = () => {
       const highestId = Math.max(...plans.map((plan) => plan.id));
       setSelectedPlanId(highestId.toString());
 
-      const collection = createListCollection({
-        items: plans.map((plan) => ({
-          label: `${plan.name} ${
-            plan.start_gameweek === plan.end_gameweek
-              ? `(${plan.start_gameweek})`
-              : `(${plan.start_gameweek}-${plan.end_gameweek})`
-          }`,
-          value: plan.id.toString(),
-        })),
-      });
+      const options = plans.map((plan) => ({
+        label: `${plan.name} ${
+          plan.start_gameweek === plan.end_gameweek
+            ? `(${plan.start_gameweek})`
+            : `(${plan.start_gameweek}-${plan.end_gameweek})`
+        }`,
+        value: plan.id.toString(),
+      }));
 
-      setPlansCollection(collection);
+      setPlansCollection(options);
     }
   }, [plans]);
 
@@ -67,7 +59,7 @@ const PlansPage = () => {
       try {
         const oldId = selectedPlanId;
 
-        const titleToDelete = plansCollection?.items.find(
+        const titleToDelete = plansCollection.find(
           (item) => item.value === oldId,
         )?.label;
 
@@ -76,18 +68,17 @@ const PlansPage = () => {
         const remainingPlans = plans.filter(
           (plan) => plan.id.toString() !== oldId,
         );
-        const updatedCollection = createListCollection({
-          items: remainingPlans.map((plan) => ({
-            label: `${plan.name} ${
-              plan.start_gameweek === plan.end_gameweek
-                ? `(${plan.start_gameweek})`
-                : `(${plan.start_gameweek}-${plan.end_gameweek})`
-            }`,
-            value: plan.id.toString(),
-          })),
-        });
-        setPlansCollection(updatedCollection);
 
+        const updatedOptions = remainingPlans.map((plan) => ({
+          label: `${plan.name} ${
+            plan.start_gameweek === plan.end_gameweek
+              ? `(${plan.start_gameweek})`
+              : `(${plan.start_gameweek}-${plan.end_gameweek})`
+          }`,
+          value: plan.id.toString(),
+        }));
+
+        setPlansCollection(updatedOptions);
         setSelectedPlanId(
           remainingPlans.length > 0 ? remainingPlans[0].id.toString() : null,
         );
@@ -186,7 +177,7 @@ const PlansPage = () => {
         {plansCollection ? (
           <Flex justifyContent="center" alignItems="center" gap={4} mb={6}>
             <PlanSelector
-              plansCollection={plansCollection}
+              plans={plansCollection}
               selectedPlanId={selectedPlanId}
               setSelectedPlanId={setSelectedPlanId}
             />
@@ -194,9 +185,8 @@ const PlansPage = () => {
               onConfirm={handleDeletePlan}
               title={
                 pendingDeleteTitle ||
-                plansCollection?.items.find(
-                  (item) => item.value === selectedPlanId,
-                )?.label ||
+                plansCollection?.find((item) => item.value === selectedPlanId)
+                  ?.label ||
                 "Plan"
               }
             />

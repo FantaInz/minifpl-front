@@ -36,6 +36,7 @@
     "react-query": "^3.39.3",
     "react-query-auth": "^2.4.3",
     "react-router-dom": "^7.0.2",
+    "react-select": "^5.9.0",
     "react-tag-input": "^6.10.3",
     "zustand": "^5.0.2"
   },

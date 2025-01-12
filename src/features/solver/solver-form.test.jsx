@@ -59,7 +59,7 @@ describe("SolverForm", () => {
       await screen.findByText("Nazwa planu jest wymagana"),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText("Wybierz liczbę kolejek"),
+      await screen.findByText("Wybierz liczbę kolejek", { selector: "span" }),
     ).toBeInTheDocument();
   });
 });
