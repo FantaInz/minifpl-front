@@ -8,6 +8,8 @@ import LogoutModal from "./logout-modal";
 import { useUser, useLogout } from "@/lib/auth";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import GoogleButton from "react-google-button";
+import { api } from "@/lib/api-client.js";
 
 const AuthTabs = () => {
   const [activeTab, setActiveTab] = React.useState("login");
@@ -38,7 +40,22 @@ const AuthTabs = () => {
     setIsModalOpen(false);
     goToSolver();
   };
-
+  const getGoogleLink = async () => {
+    try {
+      return api.get("/api/google/login");
+    } catch (error) {
+      console.error("Błąd logowania:", error.response || error.message);
+      throw new Error(
+        error.response?.data?.message ||
+          "Logowanie przez google chwilowo niedostępne.",
+      );
+    }
+  };
+  const googleCall = async () => {
+    let resp = await getGoogleLink();
+    console.log(resp);
+    window.location.replace(resp.url);
+  };
   return (
     <Box
       p={8}
@@ -74,6 +91,8 @@ const AuthTabs = () => {
         onClose={handleCloseModal}
         onConfirm={handleLogout}
       />
+      <p>Alternatywnie:</p>
+      <GoogleButton onClick={googleCall} />
     </Box>
   );
 };

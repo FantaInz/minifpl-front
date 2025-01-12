@@ -14,7 +14,7 @@ export const getUser = async () => {
     return null;
   }
   try {
-    const response = await api.get("/api/auth/me");
+    const response = await api.get("/api/user/get");
     return response;
   } catch (error) {
     console.error("Błąd pobierania użytkownika:", error.message);

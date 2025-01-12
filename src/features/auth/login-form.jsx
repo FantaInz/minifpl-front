@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Stack, Input, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-
+import { api } from "@/lib/api-client.js";
 import { useLogin } from "@/lib/auth";
 import { useNavigation } from "@/hooks/use-navigation";
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { translateError } from "@/utils/translate-error";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "react-router-dom";
 
 const LoginForm = () => {
   const [loginError, setLoginError] = useState("");
   const [isLoggingInLocal, setIsLoggingInLocal] = useState(false);
   const { goToSolver } = useNavigation();
-
   const {
     register,
     handleSubmit,
@@ -42,6 +42,17 @@ const LoginForm = () => {
       },
     });
   };
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    async function fetchData(code) {
+      const token = await api.get("/api/google/auth?code=" + code);
+      console.log(token.access_token);
+    }
+    let code = searchParams.get("code");
+    if (code) {
+      fetchData(code);
+    }
+  }, [LoginForm]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
