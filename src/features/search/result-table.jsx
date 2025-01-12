@@ -100,7 +100,8 @@ ResultTable.propTypes = {
         name: PropTypes.string.isRequired,
       }).isRequired,
       position: PropTypes.string.isRequired,
-      points: PropTypes.number,
+      expectedPoints: PropTypes.arrayOf(PropTypes.number),
+      points: PropTypes.arrayOf(PropTypes.number),
     }),
   ).isRequired,
 };
