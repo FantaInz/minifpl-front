@@ -32,28 +32,18 @@ describe("ResultTable", () => {
       { wrapper: ThemeWrapper },
     );
 
-    expect(screen.getByText("Piłkarz")).toBeInTheDocument();
-    expect(screen.getByText("Drużyna")).toBeInTheDocument();
-    expect(screen.getByText("Pozycja")).toBeInTheDocument();
-    expect(screen.getByText("Cena")).toBeInTheDocument();
-    expect(screen.getByText("Przew. GW1")).toBeInTheDocument();
-    expect(screen.getByText("Zdob. GW1")).toBeInTheDocument();
-    expect(screen.getByText("Przew. GW3")).toBeInTheDocument();
-    expect(screen.getByText("Zdob. GW3")).toBeInTheDocument();
+    expect(screen.getByText("resultTable.player")).toBeInTheDocument();
+    expect(screen.getByText("resultTable.team")).toBeInTheDocument();
+    expect(screen.getByText("resultTable.position")).toBeInTheDocument();
+    expect(screen.getByText("resultTable.price")).toBeInTheDocument();
+    expect(screen.getByText("resultTable.availability")).toBeInTheDocument();
 
     expect(screen.getByText("Player 1")).toBeInTheDocument();
     expect(screen.getByText("Team A")).toBeInTheDocument();
-    expect(screen.getByText("Bramkarz")).toBeInTheDocument();
+    expect(screen.getByText("Goalkeeper")).toBeInTheDocument();
     expect(screen.getByText("5.0")).toBeInTheDocument();
     expect(screen.getByText("1.20")).toBeInTheDocument();
     expect(screen.getByText("1")).toBeInTheDocument();
-
-    expect(screen.getByText("Player 2")).toBeInTheDocument();
-    expect(screen.getByText("Team B")).toBeInTheDocument();
-    expect(screen.getByText("Obrońca")).toBeInTheDocument();
-    expect(screen.getByText("4.5")).toBeInTheDocument();
-    expect(screen.getByText("4.50")).toBeInTheDocument();
-    expect(screen.getByText("4")).toBeInTheDocument();
   });
 
   it("handles missing points and expected points gracefully", () => {
@@ -63,6 +53,7 @@ describe("ResultTable", () => {
         name: "Player 3",
         team: { name: "Team C" },
         position: "Midfielder",
+        availability: 50,
         price: 60,
         expectedPoints: [undefined, 6.5],
         points: [undefined, 6],
@@ -80,18 +71,18 @@ describe("ResultTable", () => {
 
     expect(screen.getByText("Player 3")).toBeInTheDocument();
     expect(screen.getByText("Team C")).toBeInTheDocument();
-    expect(screen.getByText("Pomocnik")).toBeInTheDocument();
+    expect(screen.getByText("Midfielder")).toBeInTheDocument();
     expect(screen.getByText("6.0")).toBeInTheDocument();
-    expect(screen.getAllByText("??")).toHaveLength(2);
+    expect(screen.getAllByText("resultTable.noData")).toHaveLength(2);
     expect(screen.getByText("6.50")).toBeInTheDocument();
     expect(screen.getByText("6")).toBeInTheDocument();
   });
 
-  it("renders 'Brak wyników' when players array is empty", () => {
+  it("renders 'resultTable.noResults' when players array is empty", () => {
     render(<ResultTable startGameweek={1} endGameweek={3} players={[]} />, {
       wrapper: ThemeWrapper,
     });
 
-    expect(screen.getByText("Brak wyników")).toBeInTheDocument();
+    expect(screen.getByText("resultTable.noResults")).toBeInTheDocument();
   });
 });

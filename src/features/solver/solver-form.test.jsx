@@ -18,7 +18,7 @@ describe("SolverForm", () => {
 
   beforeEach(() => {
     usePlayers.mockReturnValue({
-      data: mockPlayers,
+      data: { players: mockPlayers },
     });
   });
 
@@ -34,11 +34,11 @@ describe("SolverForm", () => {
       { wrapper: ThemeWrapper },
     );
 
-    expect(screen.getByLabelText(/Nazwa planu/i)).toBeInTheDocument();
-    expect(screen.getByText(/ID zespołu/i)).toBeInTheDocument();
-    expect(screen.getByText(/Nazwa zespołu/i)).toBeInTheDocument();
-    expect(screen.getByText(/W banku/i)).toBeInTheDocument();
-    expect(screen.getByText(/Dostępne transfery/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("solverForm.planName")).toBeInTheDocument();
+    expect(screen.getByText("solverForm.teamId")).toBeInTheDocument();
+    expect(screen.getByText("solverForm.teamName")).toBeInTheDocument();
+    expect(screen.getByText("solverForm.budget")).toBeInTheDocument();
+    expect(screen.getByText("solverForm.freeTransfers")).toBeInTheDocument();
   });
 
   it("validates required fields", async () => {
@@ -53,13 +53,15 @@ describe("SolverForm", () => {
       { wrapper: ThemeWrapper },
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Uruchom" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "solverForm.submitButton" }),
+    );
 
     expect(
-      await screen.findByText("Nazwa planu jest wymagana"),
+      await screen.findByText("solverForm.planNameRequired"),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText("Wybierz liczbę kolejek", { selector: "span" }),
+      await screen.findByText("solverForm.gameweeksRequired"),
     ).toBeInTheDocument();
   });
 });

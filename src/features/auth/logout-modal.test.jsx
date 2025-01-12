@@ -23,15 +23,11 @@ describe("LogoutModal", () => {
       { wrapper: ThemeWrapper },
     );
 
-    expect(screen.getByText("Zakończenie sesji")).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "Jesteś obecnie zalogowany. Czy na pewno chcesz się wylogować?",
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByText("logoutModal.title")).toBeInTheDocument();
+    expect(screen.getByText("logoutModal.body")).toBeInTheDocument();
 
-    expect(screen.getByText("Wróć do solvera")).toBeInTheDocument();
-    expect(screen.getByText("Wyloguj się")).toBeInTheDocument();
+    expect(screen.getByText("logoutModal.returnButton")).toBeInTheDocument();
+    expect(screen.getByText("buttons.logout")).toBeInTheDocument();
   });
 
   it("does not render modal when closed", () => {
@@ -44,10 +40,10 @@ describe("LogoutModal", () => {
       { wrapper: ThemeWrapper },
     );
 
-    expect(screen.queryByText("Zakończenie sesji")).not.toBeInTheDocument();
+    expect(screen.queryByText("logoutModal.title")).not.toBeInTheDocument();
   });
 
-  it("calls onClose when 'Wróć do solvera' is clicked", async () => {
+  it("calls onClose when 'logoutModal.returnButton' is clicked", async () => {
     render(
       <LogoutModal
         isOpen={true}
@@ -58,13 +54,13 @@ describe("LogoutModal", () => {
     );
 
     await act(async () => {
-      fireEvent.click(screen.getByText("Wróć do solvera"));
+      fireEvent.click(screen.getByText("logoutModal.returnButton"));
     });
 
     expect(mockOnClose).toHaveBeenCalled();
   });
 
-  it("calls onConfirm when 'Wyloguj się' is clicked", async () => {
+  it("calls onConfirm when 'buttons.logout' is clicked", async () => {
     render(
       <LogoutModal
         isOpen={true}
@@ -75,7 +71,7 @@ describe("LogoutModal", () => {
     );
 
     await act(async () => {
-      fireEvent.click(screen.getByText("Wyloguj się"));
+      fireEvent.click(screen.getByText("buttons.logout"));
     });
 
     expect(mockOnConfirm).toHaveBeenCalled();

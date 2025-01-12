@@ -26,30 +26,50 @@ vi.mock("@/hooks/use-navigation", () => ({
   }),
 }));
 
-vi.mock("@/utils/translate-error", () => ({
-  translateError: (error) => {
-    const errorMap = {
-      "User with this username or email already exists":
-        "Użytkownik z tą nazwą użytkownika lub adresem e-mail już istnieje.",
-    };
+vi.mock("@/utils/translate-error", async (importOriginal) => {
+  const originalModule = await importOriginal();
 
-    return errorMap[error] || "Wystąpił błąd. Spróbuj ponownie później.";
-  },
-}));
+  return {
+    ...originalModule,
+    useTranslateError: () => ({
+      translateError: (error) => {
+        const errorMap = {
+          "User with this username or email already exists":
+            "errors.userExists",
+        };
+
+        return errorMap[error] || "errors.unknownError";
+      },
+      translateErrorSolver: (message) => {
+        if (
+          message ===
+          "Optimization failed, probably due to unfeasible constraints"
+        ) {
+          return "errors.optimizationFailed";
+        }
+        return "errors.defaultSolverError";
+      },
+    }),
+  };
+});
 
 describe("RegisterForm", () => {
   it("displays validation errors on empty form submission", async () => {
     render(<RegisterForm />, { wrapper: ThemeWrapper });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zarejestruj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "registerForm.submitButton" }),
+    );
 
     expect(
-      await screen.findByText("Nazwa użytkownika jest wymagana"),
+      await screen.findByText("registerForm.usernameRequired"),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText("Adres e-mail jest wymagany"),
+      await screen.findByText("registerForm.emailRequired"),
     ).toBeInTheDocument();
-    expect(await screen.findByText("Hasło jest wymagane")).toBeInTheDocument();
+    expect(
+      await screen.findByText("registerForm.passwordRequired"),
+    ).toBeInTheDocument();
   });
 
   it("submits form with valid data", async () => {
@@ -65,7 +85,9 @@ describe("RegisterForm", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zarejestruj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "registerForm.submitButton" }),
+    );
 
     await waitFor(() => {
       expect(mockRegister).toHaveBeenCalledWith(
@@ -100,7 +122,9 @@ describe("RegisterForm", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zarejestruj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "registerForm.submitButton" }),
+    );
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith(
@@ -131,7 +155,9 @@ describe("RegisterForm", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zarejestruj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "registerForm.submitButton" }),
+    );
 
     await waitFor(() => {
       expect(mockGoToSolver).toHaveBeenCalled();
@@ -163,14 +189,12 @@ describe("RegisterForm", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zarejestruj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "registerForm.submitButton" }),
+    );
 
     await waitFor(() => {
-      expect(
-        screen.getByText(
-          "Użytkownik z tą nazwą użytkownika lub adresem e-mail już istnieje.",
-        ),
-      ).toBeInTheDocument();
+      expect(screen.getByText("errors.userExists")).toBeInTheDocument();
     });
   });
 });

@@ -21,22 +21,20 @@ describe("TeamModal", () => {
   it("renders modal with correct title and input field", () => {
     renderModal(true);
 
-    expect(screen.getByText("Dodaj Team ID")).toBeInTheDocument();
-    expect(
-      screen.getByText("Podaj ID swojego zespołu w FPL, aby przejść dalej."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("teamModal.title")).toBeInTheDocument(); // Using i18n keys
+    expect(screen.getByText("teamModal.prompt")).toBeInTheDocument();
     expect(screen.getByTestId("team-id-input")).toBeInTheDocument();
   });
 
   it("displays required validation error when input is empty", async () => {
     renderModal(true);
 
-    const submitButton = screen.getByText("Zapisz");
+    const submitButton = screen.getByText("teamModal.submitButton");
     await act(async () => {
       fireEvent.click(submitButton);
     });
 
-    expect(screen.getByText("ID jest wymagane")).toBeInTheDocument();
+    expect(screen.getByText("teamModal.errors.required")).toBeInTheDocument();
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
@@ -44,14 +42,14 @@ describe("TeamModal", () => {
     renderModal(true);
 
     const input = screen.getByTestId("team-id-input");
-    const submitButton = screen.getByText("Zapisz");
+    const submitButton = screen.getByText("teamModal.submitButton");
 
     await act(async () => {
       fireEvent.input(input, { target: { value: "0" } });
       fireEvent.click(submitButton);
     });
 
-    expect(screen.getByText("ID musi być większe od zera")).toBeInTheDocument();
+    expect(screen.getByText("teamModal.errors.min")).toBeInTheDocument();
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
@@ -59,16 +57,14 @@ describe("TeamModal", () => {
     renderModal(true);
 
     const input = screen.getByTestId("team-id-input");
-    const submitButton = screen.getByText("Zapisz");
+    const submitButton = screen.getByText("teamModal.submitButton");
 
     await act(async () => {
       fireEvent.input(input, { target: { value: "12000001" } });
       fireEvent.click(submitButton);
     });
 
-    expect(
-      screen.getByText("ID nie może być większe niż 12 milionów"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("teamModal.errors.max")).toBeInTheDocument();
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
@@ -76,7 +72,7 @@ describe("TeamModal", () => {
     renderModal(true);
 
     const input = screen.getByTestId("team-id-input");
-    const submitButton = screen.getByText("Zapisz");
+    const submitButton = screen.getByText("teamModal.submitButton");
 
     await act(async () => {
       fireEvent.input(input, { target: { value: "123456" } });
@@ -91,22 +87,20 @@ describe("TeamModal", () => {
     renderModal(true);
 
     const input = screen.getByTestId("team-id-input");
-    const submitButton = screen.getByText("Zapisz");
+    const submitButton = screen.getByText("teamModal.submitButton");
 
     await act(async () => {
       fireEvent.input(input, { target: { value: "0" } });
       fireEvent.click(submitButton);
     });
 
-    expect(screen.getByText("ID musi być większe od zera")).toBeInTheDocument();
+    expect(screen.getByText("teamModal.errors.min")).toBeInTheDocument();
 
     await act(async () => {
       fireEvent.input(input, { target: { value: "1234" } });
     });
 
-    expect(
-      screen.queryByText("ID musi być większe od zera"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("teamModal.errors.min")).not.toBeInTheDocument();
   });
 
   it("displays server error if submit fails", async () => {
@@ -114,16 +108,14 @@ describe("TeamModal", () => {
     renderModal(true);
 
     const input = screen.getByTestId("team-id-input");
-    const submitButton = screen.getByText("Zapisz");
+    const submitButton = screen.getByText("teamModal.submitButton");
 
     await act(async () => {
       fireEvent.input(input, { target: { value: "1234" } });
       fireEvent.click(submitButton);
     });
 
-    expect(
-      screen.getByText("Nieprawidłowe Team ID. Spróbuj ponownie."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("teamModal.invalidTeamId")).toBeInTheDocument();
     expect(mockOnSubmit).toHaveBeenCalledWith("1234");
   });
 });

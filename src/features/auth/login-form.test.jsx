@@ -22,36 +22,46 @@ vi.mock("@/hooks/use-navigation", () => ({
 }));
 
 vi.mock("@/utils/translate-error", () => ({
-  translateError: (error) => {
-    const errorMap = {
-      "Incorrect username or password":
-        "Nieprawidłowa nazwa użytkownika lub hasło.",
-    };
+  useTranslateError: () => ({
+    translateError: (error) => {
+      const errorMap = {
+        "Incorrect username or password":
+          "Nieprawidłowa nazwa użytkownika lub hasło.",
+      };
 
-    return errorMap[error] || "Wystąpił błąd. Spróbuj ponownie później.";
-  },
+      return errorMap[error] || "Wystąpił błąd. Spróbuj ponownie później.";
+    },
+  }),
 }));
 
 describe("LoginForm", () => {
   it("renders login form", () => {
     render(<LoginForm />, { wrapper: ThemeWrapper });
 
-    expect(screen.getByLabelText("Nazwa użytkownika")).toBeInTheDocument();
-    expect(screen.getByLabelText("Hasło")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Zaloguj się" }),
+      screen.getByLabelText("loginForm.usernameLabel"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("loginForm.passwordLabel"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "loginForm.submitButton" }),
     ).toBeInTheDocument();
   });
 
   it("displays validation errors on empty submission", async () => {
     render(<LoginForm />, { wrapper: ThemeWrapper });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zaloguj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "loginForm.submitButton" }),
+    );
 
     expect(
-      await screen.findByText("Nazwa użytkownika jest wymagana"),
+      await screen.findByText("loginForm.usernameRequired"),
     ).toBeInTheDocument();
-    expect(await screen.findByText("Hasło jest wymagane")).toBeInTheDocument();
+    expect(
+      await screen.findByText("loginForm.passwordRequired"),
+    ).toBeInTheDocument();
   });
 
   it("submits form with valid data", async () => {
@@ -64,7 +74,9 @@ describe("LoginForm", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zaloguj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "loginForm.submitButton" }),
+    );
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith(
@@ -88,7 +100,9 @@ describe("LoginForm", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zaloguj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "loginForm.submitButton" }),
+    );
 
     await waitFor(() => {
       expect(mockGoToSolver).toHaveBeenCalled();
@@ -113,7 +127,9 @@ describe("LoginForm", () => {
       target: { value: "wrongpassword" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Zaloguj się" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "loginForm.submitButton" }),
+    );
 
     await waitFor(() => {
       expect(

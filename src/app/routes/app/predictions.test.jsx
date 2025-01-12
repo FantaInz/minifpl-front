@@ -26,6 +26,13 @@ vi.mock("@/features/search/result-table", () => ({
   )),
 }));
 
+vi.mock("@/features/search/search-form", () => ({
+  __esModule: true,
+  default: vi.fn(() => (
+    <div data-testid="mock-search-form">Mock Search Form</div>
+  )),
+}));
+
 describe("PredictionsPage", () => {
   const mockUseMaxWeek = vi.spyOn(useMaxWeekHook, "useMaxWeek");
   const mockUsePlayers = vi.spyOn(usePlayersHook, "usePlayers");
@@ -84,7 +91,7 @@ describe("PredictionsPage", () => {
 
     render(<PredictionsPage />, { wrapper: ThemeWrapper });
 
-    expect(screen.getByText("Ładowanie danych...")).toBeInTheDocument();
+    expect(screen.getByText("loading.data")).toBeInTheDocument();
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
@@ -124,7 +131,7 @@ describe("PredictionsPage", () => {
     });
   });
 
-  it("renders 'Brak rezultatów' when there are no players", async () => {
+  it("renders 'no results' when there are no players", async () => {
     mockUseMaxWeek.mockReturnValue({ data: 38, isLoading: false, error: null });
     mockUsePlayers.mockReturnValue({
       data: { players: [], totalPages: 0 },
@@ -134,6 +141,6 @@ describe("PredictionsPage", () => {
 
     render(<PredictionsPage />, { wrapper: ThemeWrapper });
 
-    expect(screen.getByText("Brak rezultatów")).toBeInTheDocument();
+    expect(screen.getByText("search.noResults")).toBeInTheDocument();
   });
 });

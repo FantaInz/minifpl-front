@@ -22,9 +22,11 @@ describe("NavBar", () => {
   it("renders logo, links, and logout button", () => {
     render(<NavBar />, { wrapper: ThemeWrapper });
 
-    expect(screen.getByTestId("nav-solver-desktop")).toBeInTheDocument();
-    expect(screen.getByTestId("nav-twoje plany-desktop")).toBeInTheDocument();
-    expect(screen.getByTestId("nav-predykcje-desktop")).toBeInTheDocument();
+    expect(screen.getByTestId("nav-navbar.solver-desktop")).toBeInTheDocument();
+    expect(screen.getByTestId("nav-navbar.plans-desktop")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("nav-navbar.predictions-desktop"),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("logo-icon")).toBeInTheDocument();
     expect(screen.getByTestId("logout-button")).toBeInTheDocument();
   });
@@ -33,13 +35,13 @@ describe("NavBar", () => {
     render(<NavBar />, { wrapper: ThemeWrapper });
 
     expect(
-      screen.getByTestId("nav-solver-desktop").closest("a"),
+      screen.getByTestId("nav-navbar.solver-desktop").closest("a"),
     ).toHaveAttribute("href", paths.app.solver.path);
     expect(
-      screen.getByTestId("nav-twoje plany-desktop").closest("a"),
+      screen.getByTestId("nav-navbar.plans-desktop").closest("a"),
     ).toHaveAttribute("href", paths.app.plans.path);
     expect(
-      screen.getByTestId("nav-predykcje-desktop").closest("a"),
+      screen.getByTestId("nav-navbar.predictions-desktop").closest("a"),
     ).toHaveAttribute("href", paths.app.predictions.path);
   });
 

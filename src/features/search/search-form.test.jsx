@@ -5,6 +5,16 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import SearchForm from "./search-form";
 import ThemeWrapper from "@/testing/theme-wrapper";
 
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+    i18n: {
+      on: vi.fn(),
+      off: vi.fn(),
+    },
+  }),
+}));
+
 const mockOnSubmit = vi.fn();
 
 describe("SearchForm", () => {
@@ -21,13 +31,19 @@ describe("SearchForm", () => {
     });
 
     expect(
-      screen.getByPlaceholderText("Wpisz imię lub nazwisko piłkarza"),
+      screen.getByPlaceholderText("searchForm.placeholders.searchPlayers"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Minimalna cena")).toBeInTheDocument();
-    expect(screen.getByText("Maksymalna cena")).toBeInTheDocument();
-    expect(screen.getByText("Włącz sortowanie")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Szukaj" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Resetuj" })).toBeInTheDocument();
+    expect(screen.getByText("searchForm.labels.minPrice")).toBeInTheDocument();
+    expect(screen.getByText("searchForm.labels.maxPrice")).toBeInTheDocument();
+    expect(
+      screen.getByText("searchForm.labels.enableSorting"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "searchForm.buttons.search" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "searchForm.buttons.reset" }),
+    ).toBeInTheDocument();
   });
 
   it("submits the form and saves data to localStorage", async () => {
@@ -36,9 +52,11 @@ describe("SearchForm", () => {
     });
 
     const searchInput = screen.getByPlaceholderText(
-      "Wpisz imię lub nazwisko piłkarza",
+      "searchForm.placeholders.searchPlayers",
     );
-    const submitButton = screen.getByRole("button", { name: "Szukaj" });
+    const submitButton = screen.getByRole("button", {
+      name: "searchForm.buttons.search",
+    });
 
     await userEvent.type(searchInput, "Harry Kane");
     await userEvent.click(submitButton);
@@ -61,9 +79,11 @@ describe("SearchForm", () => {
     });
 
     const searchInput = screen.getByPlaceholderText(
-      "Wpisz imię lub nazwisko piłkarza",
+      "searchForm.placeholders.searchPlayers",
     );
-    const resetButton = screen.getByRole("button", { name: "Resetuj" });
+    const resetButton = screen.getByRole("button", {
+      name: "searchForm.buttons.reset",
+    });
 
     await userEvent.type(searchInput, "Harry Kane");
     fireEvent.click(resetButton);
@@ -74,12 +94,14 @@ describe("SearchForm", () => {
     });
   });
 
-  it("enables sorting options when 'Włącz sortowanie' is checked", async () => {
+  it("enables sorting options when checked", async () => {
     render(<SearchForm maxWeek={maxWeek} onSubmit={mockOnSubmit} />, {
       wrapper: ThemeWrapper,
     });
 
-    const sortCheckbox = screen.getByText("Włącz sortowanie").closest("label");
+    const sortCheckbox = screen
+      .getByText("searchForm.labels.enableSorting")
+      .closest("label");
     expect(sortCheckbox).toBeInTheDocument();
 
     const enableSortingInput = sortCheckbox.querySelector(
@@ -89,7 +111,9 @@ describe("SearchForm", () => {
 
     await userEvent.click(enableSortingInput);
 
-    const sortBySelect = screen.getByText("Sortuj według").nextElementSibling;
+    const sortBySelect = screen.getByText(
+      "searchForm.labels.sortBy",
+    ).nextElementSibling;
     expect(sortBySelect).toBeInTheDocument();
   });
 
@@ -116,11 +140,11 @@ describe("SearchForm", () => {
     });
 
     expect(
-      screen.getByPlaceholderText("Wpisz imię lub nazwisko piłkarza"),
+      screen.getByPlaceholderText("searchForm.placeholders.searchPlayers"),
     ).toHaveValue("Saved Player");
 
     const sortCheckbox = screen.getByRole("checkbox", {
-      name: /Włącz sortowanie/i,
+      name: /searchForm.labels.enableSorting/i,
     });
     expect(sortCheckbox).toBeChecked();
   });

@@ -20,12 +20,14 @@ describe("MainErrorFallback", () => {
 
   it("renders the error message", () => {
     render(<MainErrorFallback />, { wrapper: ThemeWrapper });
-    expect(screen.getByText("Coś poszło nie tak 😢")).toBeInTheDocument();
+    expect(screen.getByText("errorFallback.message")).toBeInTheDocument();
   });
 
   it("renders the error message", () => {
     render(<MainErrorFallback />, { wrapper: ThemeWrapper });
-    fireEvent.click(screen.getByRole("button", { name: /Odśwież aplikację/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /errorFallback.reloadButton/i }),
+    );
     expect(window.location.reload).toHaveBeenCalledTimes(1);
   });
 });

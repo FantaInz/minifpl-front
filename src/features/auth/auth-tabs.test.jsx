@@ -66,8 +66,8 @@ describe("AuthTabs", () => {
     render(<AuthTabs />, { wrapper: ThemeWrapper });
 
     expect(screen.getByText("MiniFPL")).toBeInTheDocument();
-    expect(screen.getByText("Zaloguj się")).toBeInTheDocument();
-    expect(screen.getByText("Zarejestruj się")).toBeInTheDocument();
+    expect(screen.getByText("tabs.login")).toBeInTheDocument();
+    expect(screen.getByText("tabs.register")).toBeInTheDocument();
   });
 
   it("displays login form by default", () => {
@@ -80,7 +80,7 @@ describe("AuthTabs", () => {
     render(<AuthTabs />, { wrapper: ThemeWrapper });
 
     await act(async () => {
-      fireEvent.click(screen.getByText("Rejestracja"));
+      fireEvent.click(screen.getByText("tabs.register"));
     });
 
     expect(screen.getByTestId("register-username")).toBeInTheDocument();
@@ -90,12 +90,12 @@ describe("AuthTabs", () => {
     render(<AuthTabs />, { wrapper: ThemeWrapper });
 
     await act(async () => {
-      fireEvent.click(screen.getByText("Rejestracja"));
+      fireEvent.click(screen.getByText("tabs.register"));
     });
     expect(screen.getByTestId("register-username")).toBeInTheDocument();
 
     await act(async () => {
-      fireEvent.click(screen.getByText("Logowanie"));
+      fireEvent.click(screen.getByText("tabs.login"));
     });
     expect(screen.getByTestId("login-username")).toBeInTheDocument();
   });

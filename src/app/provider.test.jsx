@@ -61,7 +61,7 @@ describe("AppProvider", () => {
     );
 
     await waitFor(() =>
-      expect(screen.getByText("Coś poszło nie tak 😢")).toBeInTheDocument(),
+      expect(screen.getByText("errorFallback.message")).toBeInTheDocument(),
     );
   });
 });
