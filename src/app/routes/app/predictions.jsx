@@ -1,16 +1,21 @@
 import React from "react";
-import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Text, HStack } from "@chakra-ui/react";
 import SearchForm from "@/features/search/search-form";
 import { usePlayers } from "@/features/search/api/search-players";
 import { useMaxWeek } from "@/features/search/api/get-max-predictions";
 import { toaster } from "@/components/ui/toaster";
+import {
+  PaginationItems,
+  PaginationNextTrigger,
+  PaginationPrevTrigger,
+  PaginationRoot,
+} from "@/components/ui/pagination";
 
 const PredictionsPage = () => {
   const { data: maxWeek, isLoading, error: maxWeekError } = useMaxWeek();
   const [filters, setFilters] = React.useState(null);
-  const [players, setPlayers] = React.useState([]);
-  const [totalPages, setTotalPages] = React.useState(0);
   const [pageNumber, setPageNumber] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(10);
   const [gameweekRange, setGameweekRange] = React.useState({
     startGameweek: null,
     endGameweek: null,
@@ -22,18 +27,13 @@ const PredictionsPage = () => {
     error: playersError,
   } = usePlayers(filters, { queryConfig: { enabled: !!filters } });
 
-  React.useEffect(() => {
-    if (data) {
-      setPlayers(data.players || []);
-      setTotalPages(data.totalPages || 0);
-    }
-  }, [data]);
-
   const handleSearch = (searchData) => {
     const { startGameweek, rangeGameweek, ...rest } = searchData;
     const start = parseInt(startGameweek.value, 10);
     const range = parseInt(rangeGameweek.value, 10);
     const endGameweek = Math.min(start + range - 1, maxWeek);
+
+    setPageSize(pageSize);
 
     const filteredSearchData = {
       ...rest,
@@ -43,6 +43,15 @@ const PredictionsPage = () => {
     setGameweekRange({ startGameweek: start, endGameweek });
     setPageNumber(0);
     console.log("Filtry wyszukiwania:", filteredSearchData);
+  };
+
+  const handlePageChange = (page) => {
+    const apiPageNumber = page - 1;
+    setPageNumber(apiPageNumber);
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      pageNumber: apiPageNumber,
+    }));
   };
 
   React.useEffect(() => {
@@ -77,12 +86,16 @@ const PredictionsPage = () => {
     );
   }
 
+  const players = data?.players || [];
+  const totalPages = data?.totalPages || 0;
+  console.log("Players:", players);
+  console.log("Total Pages:", totalPages);
+
   return (
     <Flex
       direction={{ base: "column", md: "row" }}
       justifyContent="center"
       alignItems={{ base: "center", md: "flex-start" }}
-      height="100vh"
       p={4}
       gap={6}
     >
@@ -99,8 +112,8 @@ const PredictionsPage = () => {
         maxWidth="600px"
       >
         <Text fontSize="xl" mb={4}>
-          Wyniki wyszukiwania: {totalPages} {gameweekRange.startGameweek} -{" "}
-          {gameweekRange.endGameweek} {pageNumber}
+          Wyniki wyszukiwania: {gameweekRange.startGameweek} -{" "}
+          {gameweekRange.endGameweek}
         </Text>
         {players.length > 0 ? (
           <Box as="ul">
@@ -112,6 +125,21 @@ const PredictionsPage = () => {
           </Box>
         ) : (
           <Text>Brak wyników wyszukiwania</Text>
+        )}
+        {totalPages > 1 && (
+          <PaginationRoot
+            count={totalPages * pageSize}
+            variant="solid"
+            pageSize={pageSize}
+            page={pageNumber + 1}
+            onPageChange={(e) => handlePageChange(e.page)}
+          >
+            <HStack mt={4}>
+              <PaginationPrevTrigger />
+              <PaginationItems />
+              <PaginationNextTrigger />
+            </HStack>
+          </PaginationRoot>
         )}
       </Box>
     </Flex>
