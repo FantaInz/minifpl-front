@@ -157,7 +157,11 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <Stack gap="4" align="flex-start">
         <Field label="Szukaj zawodników">
-          <InputGroup flex="1" startElement={<LuSearch />} minW="350px">
+          <InputGroup
+            flex="1"
+            startElement={<LuSearch />}
+            minW={{ base: "100%", md: "350px" }}
+          >
             <Input
               placeholder="Wpisz imię lub nazwisko piłkarza"
               {...register("searchQuery")}
@@ -166,7 +170,12 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
           </InputGroup>
         </Field>
 
-        <HStack spacing={4} align="center" justify="space-between" width="50%">
+        <HStack
+          spacing={4}
+          align="center"
+          justify="space-between"
+          width={{ base: "100%", md: "50%" }}
+        >
           <Field label="Minimalna cena">
             <Controller
               name="minPrice"
@@ -181,7 +190,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   min={0}
                   step={0.1}
                   max={16}
-                  maxW="80px"
+                  maxW={{ base: "100px", md: "80px" }}
                   bg="white"
                   allowOverflow={false}
                   formatOptions={formatOptions}
@@ -191,7 +200,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
               )}
             />
           </Field>
-          <Field label="Maksymalna cena" minW="150px">
+          <Field label="Maksymalna cena">
             <Controller
               name="maxPrice"
               control={control}
@@ -205,7 +214,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   min={0}
                   step={0.1}
                   max={16}
-                  maxW="80px"
+                  maxW={{ base: "100px", md: "80px" }}
                   bg="white"
                   allowOverflow={false}
                   formatOptions={formatOptions}
@@ -228,7 +237,8 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                 isMulti
                 placeholder="Wybierz pozycje"
                 styles={customStyles({
-                  width: "350px",
+                  width: "100%",
+                  maxWidth: "350px",
                   fontSize: "0.875rem",
                 })}
                 closeMenuOnSelect={false}
@@ -254,7 +264,8 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                 isMulti
                 placeholder="Wybierz drużyny"
                 styles={customStyles({
-                  width: "350px",
+                  width: "100%",
+                  maxWidth: "350px",
                   fontSize: "0.875rem",
                 })}
                 closeMenuOnSelect={false}
@@ -280,7 +291,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   options={gameweeksAllOptions}
                   placeholder="Wybierz kolejkę"
                   styles={customStyles({
-                    width: "170px",
+                    width: "130px",
                     fontSize: "0.875rem",
                   })}
                 />
@@ -298,7 +309,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   options={rangeOptions}
                   placeholder="Wybierz zakres"
                   styles={customStyles({
-                    width: "170px",
+                    width: "130px",
                     fontSize: "0.875rem",
                   })}
                 />
@@ -336,7 +347,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                     options={sortByOptions}
                     placeholder="Wybierz kryterium"
                     styles={customStyles({
-                      width: "350px",
+                      width: "250px",
                       fontSize: "0.875rem",
                     })}
                   />
@@ -351,7 +362,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                     options={sortOrderOptions}
                     placeholder="Rosnąco/Malejąco"
                     styles={customStyles({
-                      width: "100%",
+                      width: "250px",
                       fontSize: "0.875rem",
                     })}
                   />
@@ -393,7 +404,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
           />
         </Field>
 
-        <HStack spacing={4}>
+        <HStack spacing={4} mx="auto">
           <Button type="submit" colorPalette="blue">
             Szukaj
           </Button>

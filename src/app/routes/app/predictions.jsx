@@ -10,6 +10,7 @@ import {
   PaginationPrevTrigger,
   PaginationRoot,
 } from "@/components/ui/pagination";
+import ResultTable from "@/features/search/result-table";
 
 const PredictionsPage = () => {
   const { data: maxWeek, isLoading, error: maxWeekError } = useMaxWeek();
@@ -29,8 +30,8 @@ const PredictionsPage = () => {
 
   const handleSearch = (searchData) => {
     const { startGameweek, rangeGameweek, ...rest } = searchData;
-    const start = parseInt(startGameweek.value, 10);
-    const range = parseInt(rangeGameweek.value, 10);
+    const start = parseInt(startGameweek, 10);
+    const range = parseInt(rangeGameweek, 10);
     const endGameweek = Math.min(start + range - 1, maxWeek);
 
     setPageSize(pageSize);
@@ -100,46 +101,49 @@ const PredictionsPage = () => {
       gap={6}
     >
       <Box
-        flex={{ base: "0 0 auto", md: "1" }}
+        p={8}
+        borderWidth={1}
+        borderRadius="lg"
+        boxShadow="lg"
+        bg="white"
         width={{ base: "100%", md: "50%" }}
-        maxWidth="600px"
       >
         <SearchForm maxWeek={maxWeek} onSubmit={handleSearch} />
       </Box>
       <Box
-        flex={{ base: "0 0 auto", md: "1" }}
-        width={{ base: "100%", md: "50%" }}
-        maxWidth="600px"
+        p={8}
+        borderWidth={1}
+        borderRadius="lg"
+        boxShadow="lg"
+        bg="white"
+        width={{ base: "100%", md: "90%" }}
       >
-        <Text fontSize="xl" mb={4}>
-          Wyniki wyszukiwania: {gameweekRange.startGameweek} -{" "}
-          {gameweekRange.endGameweek}
-        </Text>
         {players.length > 0 ? (
-          <Box as="ul">
-            {players.map((player) => (
-              <Box as="li" key={player.id} mb={2}>
-                {player.name} - {player.team.name} ({player.position})
-              </Box>
-            ))}
-          </Box>
+          <ResultTable
+            startGameweek={gameweekRange.startGameweek}
+            endGameweek={gameweekRange.endGameweek}
+            players={players}
+          />
         ) : (
-          <Text>Brak wyników wyszukiwania</Text>
+          <Text size="xl">Brak rezultatów</Text>
         )}
         {totalPages > 1 && (
-          <PaginationRoot
-            count={totalPages * pageSize}
-            variant="solid"
-            pageSize={pageSize}
-            page={pageNumber + 1}
-            onPageChange={(e) => handlePageChange(e.page)}
-          >
-            <HStack mt={4}>
-              <PaginationPrevTrigger />
-              <PaginationItems />
-              <PaginationNextTrigger />
-            </HStack>
-          </PaginationRoot>
+          <Flex justifyContent="center" mt={4}>
+            <PaginationRoot
+              count={totalPages * pageSize}
+              variant="solid"
+              pageSize={pageSize}
+              page={pageNumber + 1}
+              onPageChange={(e) => handlePageChange(e.page)}
+              colorPalette="blue"
+            >
+              <HStack mt={4}>
+                <PaginationPrevTrigger />
+                <PaginationItems />
+                <PaginationNextTrigger />
+              </HStack>
+            </PaginationRoot>
+          </Flex>
         )}
       </Box>
     </Flex>
