@@ -18,7 +18,6 @@ export const useDeletePlan = () => {
   return useMutation({
     mutationFn: deletePlan,
     onSuccess: () => {
-      console.log("Plan został usunięty.");
       queryClient.invalidateQueries({ queryKey: ["myPlans"] });
     },
     onError: (error) => {

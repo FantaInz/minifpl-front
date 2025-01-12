@@ -91,9 +91,6 @@ const PredictionsPage = () => {
 
   const players = data?.players || [];
   const totalPages = data?.totalPages || 0;
-  console.log("Players:", players);
-  console.log("Total Pages:", totalPages);
-
   return (
     <Flex
       direction={{ base: "column", md: "row" }}

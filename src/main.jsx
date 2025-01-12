@@ -4,8 +4,4 @@ import "./index.css";
 import "@/utils/i18n";
 import { App } from "./app";
 
-createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+createRoot(document.getElementById("root")).render(<App />);

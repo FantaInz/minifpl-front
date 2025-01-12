@@ -46,7 +46,6 @@ api.interceptors.response.use(
     const status = error.response?.status;
     const requestUrl = error.config?.url || "";
     const detail = error.response?.data?.detail || "";
-    console.log(detail);
 
     if (
       requestUrl.includes("/api/auth/login") ||

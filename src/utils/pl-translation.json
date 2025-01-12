@@ -176,6 +176,16 @@
   "search": {
     "noResults": "Brak rezultatów"
   },
+  "googleLogin": {
+    "text": "Zaloguj się przez Google",
+    "loading": "Logowanie...",
+    "successTitle": "Sukces",
+    "successMessage": "Zalogowano pomyślnie!",
+    "errorTitle": "Błąd logowania przez Google",
+    "errorMessage": "Logowanie przez Google nie powiodło się.",
+    "localErrorTitle": "Błąd logowania lokalnego",
+    "localErrorMessage": "Nie udało się zalogować."
+  },
   "plansPage": {
     "loadingData": "Ładowanie danych...",
     "loadingPlansList": "Ładowanie listy planów..."

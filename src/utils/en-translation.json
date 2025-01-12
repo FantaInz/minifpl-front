@@ -186,6 +186,16 @@
       "descending": "Descending"
     }
   },
+  "googleLogin": {
+    "text": "Sign in with Google",
+    "loading": "Signing in...",
+    "successTitle": "Success",
+    "successMessage": "Successfully logged in!",
+    "errorTitle": "Google Login Error",
+    "errorMessage": "Google login failed.",
+    "localErrorTitle": "Local Login Error",
+    "localErrorMessage": "Failed to log in."
+  },
   "loading": {
     "data": "Loading data..."
   },

@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Tabs } from "@chakra-ui/react";
+import { useSearchParams } from "react-router-dom";
 
 import LoginForm from "./login-form";
 import RegisterForm from "./register-form";
@@ -10,6 +11,8 @@ import { useUser, useLogout } from "@/lib/auth";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import GoogleLoginButton from "@/components/ui/google-button";
+import { useGoogleLogin } from "./api/login-with-google";
 
 const AuthTabs = () => {
   const { t } = useTranslation();
@@ -20,6 +23,17 @@ const AuthTabs = () => {
   const logout = useLogout();
   const { goToSolver } = useNavigation();
   const queryClient = useQueryClient();
+
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get("code");
+
+  const { mutate: googleLogin } = useGoogleLogin();
+
+  React.useEffect(() => {
+    if (code) {
+      googleLogin(code);
+    }
+  }, [code, googleLogin]);
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
@@ -77,7 +91,7 @@ const AuthTabs = () => {
           <RegisterForm />
         </Tabs.Content>
       </Tabs.Root>
-
+      <GoogleLoginButton />
       <LogoutModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
