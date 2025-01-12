@@ -21,7 +21,7 @@ vi.mock("@/utils/storage", () => ({
 }));
 
 const server = setupServer(
-  http.get("*/api/auth/me", ({ request }) => {
+  http.get("*/api/user/get", ({ request }) => {
     const authHeader = request.headers.get("Authorization");
     if (authHeader === "Bearer valid-token") {
       return HttpResponse.json({ id: 1, username: "testuser" });
@@ -65,7 +65,7 @@ const server = setupServer(
     return HttpResponse.json({}, { status: 201 });
   }),
 
-  http.options("*/api/auth/me", () => HttpResponse.json({})),
+  http.options("*/api/user/get", () => HttpResponse.json({})),
   http.options("*/api/auth/login", () => HttpResponse.json({})),
   http.options("*/api/user/register", () => HttpResponse.json({})),
 );
