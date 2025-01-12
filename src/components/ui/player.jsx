@@ -1,12 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Box, Image, Text, Flex } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
+
 import mapTeamIdToCode from "@/utils/team-mapper";
 import { getLastName } from "@/utils/get-last-name";
-
 import { Tooltip } from "./tooltip";
 
 const Player = ({ name, club_id, points }) => {
+  const { t } = useTranslation();
+
   const clubCode = mapTeamIdToCode(club_id);
   const shirtSrc = new URL(
     `/src/assets/koszulki/${clubCode}.svg`,
@@ -31,7 +34,7 @@ const Player = ({ name, club_id, points }) => {
             width="100%"
             gap={{ base: 0.5, sm: 1 }}
           >
-            <Tooltip showArrow content={`Otrzymane punkty: ${actual}`}>
+            <Tooltip showArrow content={t("player.receivedPoints", { actual })}>
               <Box
                 bg="green.100"
                 color="green.800"
@@ -48,7 +51,10 @@ const Player = ({ name, club_id, points }) => {
                 </Text>
               </Box>
             </Tooltip>
-            <Tooltip showArrow content={`Przewidywane punkty: ${expected}`}>
+            <Tooltip
+              showArrow
+              content={t("player.expectedPoints", { expected })}
+            >
               <Box
                 bg="blue.100"
                 color="blue.800"
@@ -69,7 +75,7 @@ const Player = ({ name, club_id, points }) => {
         );
       } else if (actual !== undefined && actual !== null) {
         return (
-          <Tooltip showArrow content={`Otrzymane punkty: ${actual}`}>
+          <Tooltip showArrow content={t("player.receivedPoints", { actual })}>
             <Box
               bg="green.100"
               color="green.800"
@@ -88,7 +94,7 @@ const Player = ({ name, club_id, points }) => {
         );
       } else if (expected !== undefined && expected !== null) {
         return (
-          <Tooltip showArrow content={`Przewidywane punkty: ${expected}`}>
+          <Tooltip showArrow content={t("player.expectedPoints", { expected })}>
             <Box
               bg="blue.100"
               color="blue.800"
@@ -110,8 +116,8 @@ const Player = ({ name, club_id, points }) => {
 
     const tooltipText =
       mode === "actual"
-        ? `Otrzymane punkty: ${actual}`
-        : `Przewidywane punkty: ${expected}`;
+        ? t("player.receivedPoints", { actual })
+        : t("player.expectedPoints", { expected });
 
     const boxColor = mode === "actual" ? "green.100" : "blue.100";
     const textColor = mode === "actual" ? "green.800" : "blue.800";

@@ -1,0 +1,251 @@
+{
+  "tabs": {
+    "login": "Login",
+    "register": "Register"
+  },
+  "loginForm": {
+    "usernameLabel": "Username",
+    "passwordLabel": "Password",
+    "usernameRequired": "Username is required.",
+    "passwordRequired": "Password is required.",
+    "submitButton": "Log in"
+  },
+  "registerForm": {
+    "usernameLabel": "Username",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "usernameRequired": "Username is required",
+    "emailRequired": "Email address is required",
+    "passwordRequired": "Password is required",
+    "usernameMinLength": "Username must be at least 3 characters long",
+    "passwordMinLength": "Password must be at least 8 characters long",
+    "emailInvalid": "Invalid email address",
+    "submitButton": "Register"
+  },
+  "logoutModal": {
+    "title": "End of Session",
+    "body": "You are currently logged in. Are you sure you want to log out?",
+    "returnButton": "Return to Solver",
+    "logoutButton": "Log Out",
+    "successMessage": "Logged out successfully!",
+    "errorMessage": "An error occurred during logout."
+  },
+  "buttons": {
+    "logout": "Logout"
+  },
+  "navbar": {
+    "solver": "Solver",
+    "plans": "Your Plans",
+    "predictions": "Predictions"
+  },
+  "solverPage": {
+    "loadingSquad": "Fetching squad data...",
+    "yourSquad": "Your squad in  GW{{gameweek}}",
+    "noSquadData": "No squad data available.",
+    "optimizationInProgress": "Squad optimization in progress..."
+  },
+  "teamModal": {
+    "title": "Add Team ID",
+    "prompt": "Enter your FPL team ID to proceed.",
+    "placeholder": "Enter team ID",
+    "submitButton": "Save",
+    "invalidTeamId": "Invalid Team ID. Please try again.",
+    "errors": {
+      "required": "Team ID is required.",
+      "min": "Team ID must be greater than 0.",
+      "max": "Team ID cannot exceed 12 million."
+    }
+  },
+  "player": {
+    "receivedPoints": "Received points: {{actual}}",
+    "expectedPoints": "Expected points: {{expected}}"
+  },
+  "loadingModal": {
+    "loadingTitle": "Please wait...",
+    "errorTitle": "Error!",
+    "returnButton": "Return to solver"
+  },
+  "notFoundPage": {
+    "message": "Oops! The page you're looking for cannot be found.",
+    "goToSolver": "Go to solver",
+    "goToLogin": "Go to login"
+  },
+  "solverForm": {
+    "teamId": "Team ID",
+    "teamName": "Team Name",
+    "budget": "In The Bank",
+    "freeTransfers": "Available Transfers",
+    "planName": "Plan Name",
+    "planNamePlaceholder": "Enter plan name",
+    "planNameRequired": "Plan name is required",
+    "planNameMinLength": "Plan name must be at least 3 characters",
+    "gameweeks": "Gameweeks",
+    "gameweeksPlaceholder": "Select gameweeks",
+    "gameweeksRequired": "Select gameweeks",
+    "mustHavePlayers": "Must-Have Players",
+    "mustHavePlaceholder": "Select players",
+    "avoidPlayers": "Avoid Players",
+    "avoidPlaceholder": "Select players",
+    "submitButton": "Run"
+  },
+  "planDetails": {
+    "title": "Plan Details",
+    "gameweek": "Gameweek {{gameweek}} ({{points}} pts)",
+    "captain": "Captain",
+    "noCaptain": "No captain",
+    "transferOut": "Transfers Out",
+    "transferIn": "Transfers In",
+    "noTransfers": "No transfers"
+  },
+  "planSelector": {
+    "placeholder": "Select a plan"
+  },
+  "noPlansMessage": {
+    "title": "No Plans Found",
+    "description": "It looks like you don't have any saved plans.",
+    "buttonText": "Go to Solver"
+  },
+  "confirmDeletionModal": {
+    "triggerButton": "Delete Plan",
+    "title": "Delete Plan",
+    "body": "Are you sure you want to delete the plan named {{title}}?",
+    "cancelButton": "Cancel",
+    "confirmButton": "Delete"
+  },
+  "gameweekSelector": {
+    "heading": "Select a Gameweek"
+  },
+  "plansPage": {
+    "loadingData": "Loading data...",
+    "loadingPlansList": "Loading plans list..."
+  },
+  "positions": {
+    "goalkeeper": "Goalkeeper",
+    "defender": "Defender",
+    "midfielder": "Midfielder",
+    "forward": "Forward"
+  },
+  "resultTable": {
+    "player": "Player",
+    "team": "Team",
+    "position": "Position",
+    "price": "Price",
+    "availability": "Availability",
+    "expectedPoints": "Exp. GW{{gw}}",
+    "actualPoints": "Act. GW{{gw}}",
+    "noData": "N/A",
+    "noResults": "No results available."
+  },
+  "errorFallback": {
+    "message": "Something went wrong 😢",
+    "reloadButton": "Reload the app"
+  },
+  "searchForm": {
+    "labels": {
+      "searchPlayers": "Search Players",
+      "minPrice": "Minimum Price",
+      "maxPrice": "Maximum Price",
+      "positions": "Positions",
+      "teams": "Teams",
+      "startGameweek": "From Gameweek",
+      "rangeGameweek": "Gameweeks Range",
+      "enableSorting": "Enable Sorting",
+      "sortBy": "Sort By",
+      "pageSize": "Page Size"
+    },
+    "positions": {
+      "goalkeeper": "Goalkeeper",
+      "defender": "Defender",
+      "midfielder": "Midfielder",
+      "forward": "Forward"
+    },
+    "gameweek": "GW {{count}}",
+
+    "placeholders": {
+      "searchPlayers": "Enter player name",
+      "minPrice": "Enter minimum price",
+      "maxPrice": "Enter maximum price",
+      "positions": "Select positions",
+      "teams": "Select teams",
+      "selectGameweek": "Select gameweek",
+      "selectRange": "Select range",
+      "selectCriteria": "Select criteria",
+      "selectOrder": "Ascending/Descending",
+      "selectPageSize": "Select page size"
+    },
+    "buttons": {
+      "search": "Search",
+      "reset": "Reset"
+    },
+    "sortOptions": {
+      "expectedPoints": "Expected Points",
+      "realPoints": "Actual Points"
+    },
+    "sortOrder": {
+      "ascending": "Ascending",
+      "descending": "Descending"
+    }
+  },
+  "loading": {
+    "data": "Loading data..."
+  },
+  "search": {
+    "noResults": "No results found"
+  },
+  "errors": {
+    "title": "Error",
+    "unknownError": "An unknown error occurred.",
+    "incorrectCredentials": "Incorrect username or password.",
+    "userExists": "A user with this username or email already exists.",
+    "optimizationFailed": "Optimization failed, probably due to unfeasible constraints.",
+    "defaultSolverError": "An error occurred during optimization.",
+    "maxWeekFetch": "Failed to fetch maximum gameweek data.",
+    "playerFetch": "Failed to fetch player search results."
+  },
+  "toaster": {
+    "planSaved": {
+      "title": "Plan saved successfully",
+      "description": "Your plan has been saved and is now available in 'Your Plans'."
+    },
+    "planSaveError": {
+      "title": "Error saving plan",
+      "description": "We couldn't save your plan. Please try again later."
+    },
+    "planDeleted": {
+      "title": "Plan deleted.",
+      "description": "The plan was successfully deleted."
+    },
+    "planDeletionError": {
+      "title": "Error deleting plan.",
+      "description": "Failed to delete the plan. Please try again later."
+    },
+    "optimizationSuccess": {
+      "title": "Optimization successful",
+      "description": "Your squad has been optimized successfully and saved as a plan."
+    },
+    "optimizationError": {
+      "title": "Optimization error",
+      "description": "An error occurred during squad optimization. Please try again."
+    },
+    "teamIdSet": {
+      "title": "Team ID set",
+      "description": "Your team ID has been successfully updated."
+    },
+    "teamIdError": {
+      "title": "Team ID error",
+      "description": "An error occurred while updating your team ID. Please try again."
+    },
+    "refreshError": {
+      "title": "Error refreshing plans",
+      "description": "We couldn't refresh your plans. Please reload the page."
+    },
+    "teamIdUpdated": {
+      "title": "Team ID Updated",
+      "description": "Your team ID has been updated successfully."
+    },
+    "teamIdUpdateFailed": {
+      "title": "Team ID Update Failed",
+      "description": "An error occurred while updating your team ID."
+    }
+  }
+}

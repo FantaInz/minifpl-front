@@ -16,8 +16,10 @@ import { toaster } from "@/components/ui/toaster";
 import GameweekSelector from "@/components/ui/gameweek-selector";
 import useProcessedPlayers from "@/hooks/use-processed-players";
 import { useGameweeks } from "@/hooks/plan-hooks";
+import { useTranslation } from "react-i18next";
 
 const PlansPage = () => {
+  const { t } = useTranslation();
   const { goToSolver } = useNavigation();
   const { data: user, isLoading: isUserLoading } = useUser();
   const { data: plans, isLoading: isLoadingPlans } = useMyPlans();
@@ -92,15 +94,15 @@ const PlansPage = () => {
           queryClient.invalidateQueries({ queryKey: ["myPlans"] }),
         ]);
 
-        console.log(`Plan o ID ${oldId} został usunięty!`);
-
         toaster.create({
-          title: "Plan usunięty.",
+          title: t("toaster.planDeleted.title"),
+          description: t("toaster.planDeleted.description"),
           type: "success",
         });
       } catch {
         toaster.create({
-          title: "Błąd podczas usuwania planu.",
+          title: t("toaster.planDeletionError.title"),
+          description: t("toaster.planDeletionError.description"),
           type: "error",
         });
       } finally {
@@ -135,7 +137,7 @@ const PlansPage = () => {
         flexDirection="column"
       >
         <Spinner size="xl" role="status" />
-        <Text mt={4}>Ładowanie danych...</Text>
+        <Text mt={4}>{t("plansPage.loadingData")}</Text>
       </Flex>
     );
   }
@@ -192,7 +194,7 @@ const PlansPage = () => {
             />
           </Flex>
         ) : (
-          <Text mt={4}>Ładowanie listy planów...</Text>
+          <Text mt={4}>{t("plansPage.loadingPlansList")}</Text>
         )}
 
         {planDetails && <PlanDetailsAccordion planDetails={planDetails} />}

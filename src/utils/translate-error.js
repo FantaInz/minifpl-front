@@ -1,21 +1,27 @@
-export const translateError = (error) => {
-  if (!error) return "Wystąpił nieznany błąd.";
+import { useTranslation } from "react-i18next";
 
-  const errorMap = {
-    "Incorrect username or password":
-      "Nieprawidłowa nazwa użytkownika lub hasło.",
-    "User with this username or email already exists":
-      "Użytkownik z tą nazwą użytkownika lub adresem e-mail już istnieje.",
+export const useTranslateError = () => {
+  const { t } = useTranslation();
+
+  const translateError = (error) => {
+    if (!error) return t("errors.unknownError");
+
+    const errorMap = {
+      "Incorrect username or password": t("errors.incorrectCredentials"),
+      "User with this username or email already exists": t("errors.userExists"),
+    };
+
+    return errorMap[error] || t("errors.unknownError");
   };
 
-  return errorMap[error] || "Wystąpił błąd. Spróbuj ponownie później.";
-};
+  const translateErrorSolver = (message) => {
+    if (
+      message === "Optimization failed, probably due to unfeasible constraints"
+    ) {
+      return t("errors.optimizationFailed");
+    }
+    return t("errors.defaultSolverError");
+  };
 
-export const translateErrorSolver = (message) => {
-  if (
-    message === "Optimization failed, probably due to unfeasible constraints"
-  ) {
-    return "Nie można spełnić wymagań.";
-  }
-  return "Wystąpił błąd podczas optymalizacji.";
+  return { translateError, translateErrorSolver };
 };

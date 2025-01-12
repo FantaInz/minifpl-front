@@ -5,6 +5,7 @@ import { Input, Stack, HStack, VStack } from "@chakra-ui/react";
 import { Field } from "@/components/ui/field";
 import { InputGroup } from "@/components/ui/input-group";
 import { useForm, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,13 +20,6 @@ const formatOptions = {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 };
-
-const positions = [
-  { label: "Bramkarz", value: "1" },
-  { label: "Obrońca", value: "2" },
-  { label: "Pomocnik", value: "3" },
-  { label: "Napastnik", value: "4" },
-];
 
 const teams = [
   { label: "Arsenal", value: "1" },
@@ -61,17 +55,29 @@ const pageSizeOptions = [
   { label: "50", value: "50" },
 ];
 
-const sortOrderOptions = [
-  { label: "Rosnąco", value: "asc" },
-  { label: "Malejąco", value: "desc" },
-];
-
-const sortByOptions = [
-  { label: "Punkty przewidywane", value: "expectedPoints" },
-  { label: "Punkty rzeczywiste", value: "realPoints" },
-];
-
 const SearchForm = ({ maxWeek, onSubmit }) => {
+  const { t, i18n } = useTranslation();
+
+  const positions = [
+    { label: t("searchForm.positions.goalkeeper"), value: "1" },
+    { label: t("searchForm.positions.defender"), value: "2" },
+    { label: t("searchForm.positions.midfielder"), value: "3" },
+    { label: t("searchForm.positions.forward"), value: "4" },
+  ];
+
+  const sortByOptions = [
+    {
+      label: t("searchForm.sortOptions.expectedPoints"),
+      value: "expectedPoints",
+    },
+    { label: t("searchForm.sortOptions.realPoints"), value: "realPoints" },
+  ];
+
+  const sortOrderOptions = [
+    { label: t("searchForm.sortOrder.ascending"), value: "asc" },
+    { label: t("searchForm.sortOrder.descending"), value: "desc" },
+  ];
+
   const { control, watch, register, handleSubmit, reset } = useForm({
     defaultValues: JSON.parse(localStorage.getItem("searchForm")) || {
       searchQuery: "",
@@ -80,19 +86,29 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
       positions: [],
       teams: [],
       startGameweek: {
-        label: `Kolejka ${maxWeek - 6}`,
+        label: `${t("searchForm.gameweek", { count: maxWeek - 6 })}`,
         value: (maxWeek - 6).toString(),
       },
-      rangeGameweek: { label: "4", value: "4" },
-      pageSize: { label: "20", value: "20" },
-      sortBy: { label: "Punkty przewidywane", value: "expectedPoints" },
-      sortOrder: { label: "Malejąco", value: "desc" },
+      rangeGameweek: rangeOptions[3],
+      pageSize: pageSizeOptions[1],
+      sortBy: {
+        label: t("searchForm.sortOptions.expectedPoints"),
+        value: "expectedPoints",
+      },
+      sortOrder: {
+        label: t("searchForm.sortOrder.descending"),
+        value: "desc",
+      },
       sortGameweek: {
-        label: `Kolejka ${maxWeek - 4}`,
+        label: `${t("searchForm.gameweek", { count: maxWeek - 4 })}`,
         value: (maxWeek - 4).toString(),
       },
       enableSorting: false,
     },
+  });
+
+  i18n.on("languageChanged", () => {
+    handleReset();
   });
 
   const enableSorting = watch("enableSorting");
@@ -121,7 +137,6 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
     localStorage.setItem("searchForm", JSON.stringify(data));
 
     onSubmit(searchData);
-    console.log("Przetworzone dane wyszukiwania:", searchData);
   };
 
   const handleReset = () => {
@@ -133,15 +148,21 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
       positions: [],
       teams: [],
       startGameweek: {
-        label: `Kolejka ${maxWeek - 6}`,
+        label: `${t("searchForm.gameweek", { count: maxWeek - 6 })}`,
         value: (maxWeek - 6).toString(),
       },
-      rangeGameweek: { label: "4", value: "4" },
-      pageSize: { label: "20", value: "20" },
-      sortBy: { label: "Punkty przewidywane", value: "expectedPoints" },
-      sortOrder: { label: "Malejąco", value: "desc" },
+      rangeGameweek: rangeOptions[3],
+      pageSize: pageSizeOptions[1],
+      sortBy: {
+        label: t("searchForm.sortOptions.expectedPoints"),
+        value: "expectedPoints",
+      },
+      sortOrder: {
+        label: t("searchForm.sortOrder.descending"),
+        value: "desc",
+      },
       sortGameweek: {
-        label: `Kolejka ${maxWeek - 4}`,
+        label: `${t("searchForm.gameweek", { count: maxWeek - 4 })}`,
         value: (maxWeek - 4).toString(),
       },
       enableSorting: false,
@@ -149,21 +170,21 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
   };
 
   const gameweeksAllOptions = Array.from({ length: maxWeek }, (_, i) => ({
-    label: `Kolejka ${i + 1}`,
+    label: `${t("searchForm.gameweek", { count: i + 1 })}`,
     value: (i + 1).toString(),
   }));
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <Stack gap="4" align="flex-start">
-        <Field label="Szukaj zawodników">
+        <Field label={t("searchForm.labels.searchPlayers")}>
           <InputGroup
             flex="1"
             startElement={<LuSearch />}
             minW={{ base: "100%", md: "350px" }}
           >
             <Input
-              placeholder="Wpisz imię lub nazwisko piłkarza"
+              placeholder={t("searchForm.placeholders.searchPlayers")}
               {...register("searchQuery")}
               bg="white"
             />
@@ -176,7 +197,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
           justify="space-between"
           width={{ base: "100%", md: "50%" }}
         >
-          <Field label="Minimalna cena">
+          <Field label={t("searchForm.labels.minPrice")}>
             <Controller
               name="minPrice"
               control={control}
@@ -195,12 +216,14 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   allowOverflow={false}
                   formatOptions={formatOptions}
                 >
-                  <NumberInputField placeholder="Min" />
+                  <NumberInputField
+                    placeholder={t("searchForm.placeholders.minPrice")}
+                  />
                 </NumberInputRoot>
               )}
             />
           </Field>
-          <Field label="Maksymalna cena">
+          <Field label={t("searchForm.labels.maxPrice")}>
             <Controller
               name="maxPrice"
               control={control}
@@ -219,14 +242,16 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   allowOverflow={false}
                   formatOptions={formatOptions}
                 >
-                  <NumberInputField placeholder="Max" />
+                  <NumberInputField
+                    placeholder={t("searchForm.placeholders.maxPrice")}
+                  />
                 </NumberInputRoot>
               )}
             />
           </Field>
         </HStack>
 
-        <Field label="Pozycje">
+        <Field label={t("searchForm.labels.positions")}>
           <Controller
             name="positions"
             control={control}
@@ -235,7 +260,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                 {...field}
                 options={positions}
                 isMulti
-                placeholder="Wybierz pozycje"
+                placeholder={t("searchForm.placeholders.positions")}
                 styles={customStyles({
                   width: "100%",
                   maxWidth: "350px",
@@ -253,7 +278,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
           />
         </Field>
 
-        <Field label="Drużyny">
+        <Field label={t("searchForm.labels.teams")}>
           <Controller
             name="teams"
             control={control}
@@ -262,7 +287,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                 {...field}
                 options={teams}
                 isMulti
-                placeholder="Wybierz drużyny"
+                placeholder={t("searchForm.placeholders.teams")}
                 styles={customStyles({
                   width: "100%",
                   maxWidth: "350px",
@@ -281,7 +306,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
         </Field>
 
         <HStack spacing={4} align="center" justify="space-between" width="auto">
-          <Field label="Od której kolejki">
+          <Field label={t("searchForm.labels.startGameweek")}>
             <Controller
               name="startGameweek"
               control={control}
@@ -289,7 +314,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                 <Select
                   {...field}
                   options={gameweeksAllOptions}
-                  placeholder="Wybierz kolejkę"
+                  placeholder={t("searchForm.placeholders.selectGameweek")}
                   styles={customStyles({
                     width: "130px",
                     fontSize: "0.875rem",
@@ -299,7 +324,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
             />
           </Field>
 
-          <Field label="Ile kolejek do przodu">
+          <Field label={t("searchForm.labels.rangeGameweek")}>
             <Controller
               name="rangeGameweek"
               control={control}
@@ -307,7 +332,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                 <Select
                   {...field}
                   options={rangeOptions}
-                  placeholder="Wybierz zakres"
+                  placeholder={t("searchForm.placeholders.selectRange")}
                   styles={customStyles({
                     width: "130px",
                     fontSize: "0.875rem",
@@ -329,14 +354,14 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                 checked={field.value}
                 onCheckedChange={({ checked }) => field.onChange(checked)}
               >
-                Włącz sortowanie
+                {t("searchForm.labels.enableSorting")}
               </Checkbox>
             )}
           />
         </Field>
 
         {enableSorting && (
-          <Field label="Sortuj według">
+          <Field label={t("searchForm.labels.sortBy")}>
             <VStack spacing={4} align="stretch">
               <Controller
                 name="sortBy"
@@ -345,7 +370,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   <Select
                     {...field}
                     options={sortByOptions}
-                    placeholder="Wybierz kryterium"
+                    placeholder={t("searchForm.placeholders.selectCriteria")}
                     styles={customStyles({
                       width: "250px",
                       fontSize: "0.875rem",
@@ -360,7 +385,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   <Select
                     {...field}
                     options={sortOrderOptions}
-                    placeholder="Rosnąco/Malejąco"
+                    placeholder={t("searchForm.placeholders.selectOrder")}
                     styles={customStyles({
                       width: "250px",
                       fontSize: "0.875rem",
@@ -375,7 +400,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
                   <Select
                     {...field}
                     options={gameweeksAllOptions}
-                    placeholder="Wybierz kolejkę"
+                    placeholder={t("searchForm.placeholders.selectGameweek")}
                     styles={customStyles({
                       width: "250px",
                       fontSize: "0.875rem",
@@ -387,7 +412,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
           </Field>
         )}
 
-        <Field label="Rozmiar strony">
+        <Field label={t("searchForm.labels.pageSize")}>
           <Controller
             name="pageSize"
             control={control}
@@ -395,7 +420,7 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
               <Select
                 {...field}
                 options={pageSizeOptions}
-                placeholder="Wybierz rozmiar strony"
+                placeholder={t("searchForm.placeholders.selectPageSize")}
                 styles={customStyles({
                   fontSize: "0.875rem",
                 })}
@@ -406,10 +431,10 @@ const SearchForm = ({ maxWeek, onSubmit }) => {
 
         <HStack spacing={4} mx="auto">
           <Button type="submit" colorPalette="blue">
-            Szukaj
+            {t("searchForm.buttons.search")}
           </Button>
           <Button colorPalette="purple" onClick={handleReset}>
-            Resetuj
+            {t("searchForm.buttons.reset")}
           </Button>
         </HStack>
       </Stack>

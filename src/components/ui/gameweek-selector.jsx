@@ -1,13 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Stack, Heading, HStack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { RadioCardItem, RadioCardRoot } from "@/components/ui/radio-card";
 
 const GameweekSelector = ({ gameweeks, selectedGameweek, onChange }) => {
+  const { t } = useTranslation();
+
   return (
     <Stack gap="4">
       <Heading size="2xl" mx="auto">
-        Wybierz kolejkę
+        {t("gameweekSelector.heading")}
       </Heading>
       <RadioCardRoot
         align="center"

@@ -1,8 +1,10 @@
 import React from "react";
 import { Button, Box, Text } from "@chakra-ui/react";
-import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export const MainErrorFallback = () => {
+  const { t } = useTranslation();
+
   return (
     <Box
       role="alert"
@@ -15,16 +17,11 @@ export const MainErrorFallback = () => {
       p={8}
     >
       <Text fontSize="2xl" fontWeight="bold" color="red.500" mb={4}>
-        Coś poszło nie tak 😢
+        {t("errorFallback.message")}
       </Text>
       <Button colorScheme="red" onClick={() => window.location.reload()}>
-        Odśwież aplikację
+        {t("errorFallback.reloadButton")}
       </Button>
     </Box>
   );
-};
-
-MainErrorFallback.propTypes = {
-  error: PropTypes.object,
-  resetErrorBoundary: PropTypes.func,
 };

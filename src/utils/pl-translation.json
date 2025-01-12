@@ -1,0 +1,250 @@
+{
+  "tabs": {
+    "login": "Logowanie",
+    "register": "Rejestracja"
+  },
+  "loginForm": {
+    "usernameLabel": "Nazwa użytkownika",
+    "passwordLabel": "Hasło",
+    "usernameRequired": "Nazwa użytkownika jest wymagana.",
+    "passwordRequired": "Hasło jest wymagane.",
+    "submitButton": "Zaloguj się"
+  },
+  "registerForm": {
+    "usernameLabel": "Nazwa użytkownika",
+    "emailLabel": "Adres e-mail",
+    "passwordLabel": "Hasło",
+    "usernameRequired": "Nazwa użytkownika jest wymagana",
+    "emailRequired": "Adres e-mail jest wymagany",
+    "passwordRequired": "Hasło jest wymagane",
+    "usernameMinLength": "Nazwa użytkownika musi mieć co najmniej 3 znaki",
+    "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
+    "emailInvalid": "Nieprawidłowy adres e-mail",
+    "submitButton": "Zarejestruj się"
+  },
+  "logoutModal": {
+    "title": "Zakończenie sesji",
+    "body": "Jesteś obecnie zalogowany. Czy na pewno chcesz się wylogować?",
+    "returnButton": "Wróć do solvera",
+    "logoutButton": "Wyloguj się",
+    "successMessage": "Wylogowano pomyślnie!",
+    "errorMessage": "Wystąpił błąd podczas wylogowywania."
+  },
+  "buttons": {
+    "logout": "Wyloguj się"
+  },
+  "navbar": {
+    "solver": "Solver",
+    "plans": "Twoje Plany",
+    "predictions": "Predykcje"
+  },
+  "solverPage": {
+    "loadingSquad": "Pobieranie danych o składzie...",
+    "yourSquad": "Twój skład w kolejce {{gameweek}}",
+    "noSquadData": "Brak danych o składzie.",
+    "optimizationInProgress": "Trwa optymalizacja składu..."
+  },
+  "teamModal": {
+    "title": "Dodaj Team ID",
+    "prompt": "Podaj ID swojego zespołu w FPL, aby przejść dalej.",
+    "placeholder": "Wpisz ID zespołu",
+    "submitButton": "Zapisz",
+    "invalidTeamId": "Nieprawidłowe Team ID. Spróbuj ponownie.",
+    "errors": {
+      "required": "ID zespołu jest wymagane.",
+      "min": "ID zespołu musi być większe od 0.",
+      "max": "ID zespołu nie może przekraczać 12 milionów."
+    }
+  },
+  "player": {
+    "receivedPoints": "Otrzymane punkty: {{actual}}",
+    "expectedPoints": "Przewidywane punkty: {{expected}}"
+  },
+  "loadingModal": {
+    "loadingTitle": "Proszę czekać...",
+    "errorTitle": "Błąd!",
+    "returnButton": "Wróć do solvera"
+  },
+  "notFoundPage": {
+    "message": "Ups! Strona, której szukasz, nie została znaleziona.",
+    "goToSolver": "Przejdź do solvera",
+    "goToLogin": "Przejdź do logowania"
+  },
+  "solverForm": {
+    "teamId": "ID zespołu",
+    "teamName": "Nazwa zespołu",
+    "budget": "W banku",
+    "freeTransfers": "Dostępne transfery",
+    "planName": "Nazwa planu",
+    "planNamePlaceholder": "Wpisz nazwę planu",
+    "planNameRequired": "Nazwa planu jest wymagana",
+    "planNameMinLength": "Nazwa planu musi mieć co najmniej 3 znaki",
+    "gameweeks": "Liczba kolejek",
+    "gameweeksPlaceholder": "Wybierz liczbę kolejek",
+    "gameweeksRequired": "Wybierz liczbę kolejek",
+    "mustHavePlayers": "Wymagani gracze",
+    "mustHavePlaceholder": "Wybierz graczy",
+    "avoidPlayers": "Gracze do unikania",
+    "avoidPlaceholder": "Wybierz graczy",
+    "submitButton": "Uruchom"
+  },
+  "planDetails": {
+    "title": "Szczegóły Planu",
+    "gameweek": "Kolejka {{gameweek}} ({{points}} pkt)",
+    "captain": "Kapitan",
+    "noCaptain": "Brak kapitana",
+    "transferOut": "Sprzedaż",
+    "transferIn": "Kupno",
+    "noTransfers": "Brak transferów"
+  },
+  "planSelector": {
+    "placeholder": "Wybierz plan"
+  },
+  "noPlansMessage": {
+    "title": "Nie znaleziono planów",
+    "description": "Wygląda na to, że nie masz żadnych zapisanych planów.",
+    "buttonText": "Przejdź do solvera"
+  },
+  "confirmDeletionModal": {
+    "triggerButton": "Usuń plan",
+    "title": "Usuwanie planu",
+    "body": "Czy na pewno chcesz usunąć plan o nazwie {{title}}?",
+    "cancelButton": "Anuluj",
+    "confirmButton": "Usuń"
+  },
+  "gameweekSelector": {
+    "heading": "Wybierz kolejkę"
+  },
+  "searchForm": {
+    "labels": {
+      "searchPlayers": "Szukaj zawodników",
+      "minPrice": "Minimalna cena",
+      "maxPrice": "Maksymalna cena",
+      "positions": "Pozycje",
+      "teams": "Drużyny",
+      "startGameweek": "Od kolejki",
+      "rangeGameweek": "Zakres kolejek",
+      "enableSorting": "Włącz sortowanie",
+      "sortBy": "Sortuj według",
+      "pageSize": "Rozmiar strony"
+    },
+    "positions": {
+      "goalkeeper": "Bramkarz",
+      "defender": "Obrońca",
+      "midfielder": "Pomocnik",
+      "forward": "Napastnik"
+    },
+    "gameweek": "Kolejka {{count}}",
+    "placeholders": {
+      "searchPlayers": "Wpisz nazwisko zawodnika",
+      "minPrice": "Wprowadź minimalną cenę",
+      "maxPrice": "Wprowadź maksymalną cenę",
+      "positions": "Wybierz pozycje",
+      "teams": "Wybierz drużyny",
+      "selectGameweek": "Wybierz kolejkę",
+      "selectRange": "Wybierz zakres",
+      "selectCriteria": "Wybierz kryterium",
+      "selectOrder": "Rosnąco/Malejąco",
+      "selectPageSize": "Wybierz rozmiar strony"
+    },
+    "buttons": {
+      "search": "Szukaj",
+      "reset": "Resetuj"
+    },
+    "sortOptions": {
+      "expectedPoints": "Przewidywane punkty",
+      "realPoints": "Rzeczywiste punkty"
+    },
+    "sortOrder": {
+      "ascending": "Rosnąco",
+      "descending": "Malejąco"
+    }
+  },
+  "errors": {
+    "unknownError": "Wystąpił nieznany błąd.",
+    "incorrectCredentials": "Nieprawidłowa nazwa użytkownika lub hasło.",
+    "userExists": "Użytkownik z tą nazwą użytkownika lub adresem e-mail już istnieje.",
+    "optimizationFailed": "Nie można spełnić wymagań.",
+    "defaultSolverError": "Wystąpił błąd podczas optymalizacji.",
+    "title": "Błąd",
+    "maxWeekFetch": "Nie udało się pobrać danych o maksymalnej kolejce.",
+    "playerFetch": "Nie udało się pobrać wyników wyszukiwania graczy."
+  },
+  "loading": {
+    "data": "Ładowanie danych..."
+  },
+  "search": {
+    "noResults": "Brak rezultatów"
+  },
+  "plansPage": {
+    "loadingData": "Ładowanie danych...",
+    "loadingPlansList": "Ładowanie listy planów..."
+  },
+  "positions": {
+    "goalkeeper": "Bramkarz",
+    "defender": "Obrońca",
+    "midfielder": "Pomocnik",
+    "forward": "Napastnik"
+  },
+  "resultTable": {
+    "player": "Piłkarz",
+    "team": "Drużyna",
+    "position": "Pozycja",
+    "price": "Cena",
+    "availability": "Dostępność",
+    "expectedPoints": "Przew. GW{{gw}}",
+    "actualPoints": "Zdob. GW{{gw}}",
+    "noData": "Brak",
+    "noResults": "Brak wyników."
+  },
+  "errorFallback": {
+    "message": "Coś poszło nie tak 😢",
+    "reloadButton": "Odśwież aplikację"
+  },
+  "toaster": {
+    "planSaved": {
+      "title": "Plan zapisany pomyślnie",
+      "description": "Twój plan został zapisany i jest dostępny w 'Twoje Plany'."
+    },
+    "planSaveError": {
+      "title": "Błąd zapisu planu",
+      "description": "Nie udało się zapisać planu. Spróbuj ponownie później."
+    },
+    "planDeleted": {
+      "title": "Plan usunięty.",
+      "description": "Plan został pomyślnie usunięty."
+    },
+    "planDeletionError": {
+      "title": "Błąd podczas usuwania planu.",
+      "description": "Nie udało się usunąć planu. Spróbuj ponownie później."
+    },
+    "optimizationSuccess": {
+      "title": "Optymalizacja zakończona",
+      "description": "Twój skład został pomyślnie zoptymalizowany i zapisany jako plan."
+    },
+    "optimizationError": {
+      "title": "Błąd optymalizacji",
+      "description": "Wystąpił błąd podczas optymalizacji składu. Spróbuj ponownie."
+    },
+    "teamIdSet": {
+      "title": "ID drużyny ustawione",
+      "description": "ID Twojej drużyny zostało pomyślnie zaktualizowane."
+    },
+    "teamIdError": {
+      "title": "Błąd ustawiania ID drużyny",
+      "description": "Wystąpił błąd podczas ustawiania ID drużyny. Spróbuj ponownie."
+    },
+    "refreshError": {
+      "title": "Błąd odświeżania planów",
+      "description": "Nie udało się odświeżyć planów. Odśwież stronę."
+    },
+    "teamIdUpdated": {
+      "title": "ID Drużyny zaktualizowane",
+      "description": "Twoje ID drużyny zostało pomyślnie zaktualizowane."
+    },
+    "teamIdUpdateFailed": {
+      "title": "Aktualizacja ID Drużyny nie powiodła się",
+      "description": "Wystąpił błąd podczas aktualizacji ID drużyny."
+    }
+  }
+}

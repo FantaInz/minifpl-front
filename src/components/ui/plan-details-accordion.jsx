@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Heading, Text, List } from "@chakra-ui/react";
+import { Box, Heading, List } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import {
   AccordionRoot,
   AccordionItem,
@@ -9,6 +10,7 @@ import {
 import { DataListItem, DataListRoot } from "@/components/ui/data-list";
 
 const PlanDetailsAccordion = ({ planDetails }) => {
+  const { t } = useTranslation();
   if (!planDetails) return null;
 
   return (
@@ -23,7 +25,7 @@ const PlanDetailsAccordion = ({ planDetails }) => {
       mt="3"
     >
       <Heading size="2xl" mb={6} textAlign="center">
-        Szczegóły Planu
+        {t("planDetails.title")}
       </Heading>
       <AccordionRoot multiple="true" collapsible="true">
         {Array.from(
@@ -36,7 +38,10 @@ const PlanDetailsAccordion = ({ planDetails }) => {
             return (
               <AccordionItem key={gw} value={`gw-${gw}`}>
                 <AccordionItemTrigger>
-                  Kolejka {gw} ({squad?.estimated_points})
+                  {t("planDetails.gameweek", {
+                    gameweek: gw,
+                    points: squad?.estimated_points || "??",
+                  })}
                 </AccordionItemTrigger>
                 <AccordionItemContent>
                   <DataListRoot
@@ -48,13 +53,13 @@ const PlanDetailsAccordion = ({ planDetails }) => {
                       pt="4"
                       pb="2"
                       grow
-                      label="Kapitan"
-                      value={squad?.captain?.name || "Brak kapitana"}
+                      label={t("planDetails.captain")}
+                      value={squad?.captain?.name || "??"}
                     />
                     <DataListItem
                       pt="4"
                       pb="2"
-                      label="Sprzedaż"
+                      label={t("planDetails.transferOut")}
                       grow
                       value={
                         transfers?.transfer_out?.length > 0 ? (
@@ -64,14 +69,14 @@ const PlanDetailsAccordion = ({ planDetails }) => {
                             ))}
                           </List.Root>
                         ) : (
-                          "Brak transferów"
+                          t("planDetails.noTransfers")
                         )
                       }
                     />
                     <DataListItem
                       pt="4"
                       pb="2"
-                      label="Kupno"
+                      label={t("planDetails.transferIn")}
                       grow
                       value={
                         transfers?.transfer_in?.length > 0 ? (
@@ -83,7 +88,7 @@ const PlanDetailsAccordion = ({ planDetails }) => {
                             ))}
                           </List.Root>
                         ) : (
-                          "Brak transferów"
+                          t("planDetails.noTransfers")
                         )
                       }
                     />

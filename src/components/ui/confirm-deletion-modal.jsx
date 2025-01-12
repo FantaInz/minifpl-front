@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Text } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import {
   DialogActionTrigger,
@@ -16,6 +17,7 @@ import {
 import { Button } from "./button";
 
 const ConfirmDeletionModal = ({ onConfirm, title }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -41,17 +43,17 @@ const ConfirmDeletionModal = ({ onConfirm, title }) => {
       onOpenChange={(e) => setOpen(e.open)}
     >
       <DialogTrigger asChild>
-        <Button colorPalette="red">Usuń plan</Button>
+        <Button colorPalette="red">
+          {t("confirmDeletionModal.triggerButton")}
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Usuwanie planu</DialogTitle>
+          <DialogTitle>{t("confirmDeletionModal.title")}</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <Text fontSize="lg">
-            Czy na pewno chcesz usunąć plan o nazwie <strong>{title}</strong>?
-          </Text>
+          <Text fontSize="lg">{t("confirmDeletionModal.body", { title })}</Text>
         </DialogBody>
         <DialogFooter justifyContent="center">
           <DialogActionTrigger asChild>
@@ -60,7 +62,7 @@ const ConfirmDeletionModal = ({ onConfirm, title }) => {
               variant="outline"
               loading={isLoading}
             >
-              Anuluj
+              {t("confirmDeletionModal.cancelButton")}
             </Button>
           </DialogActionTrigger>
           <Button
@@ -68,7 +70,7 @@ const ConfirmDeletionModal = ({ onConfirm, title }) => {
             onClick={handleConfirm}
             loading={isLoading}
           >
-            Usuń
+            {t("confirmDeletionModal.confirmButton")}
           </Button>
         </DialogFooter>
         {!isLoading && <DialogCloseTrigger />}

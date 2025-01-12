@@ -1,26 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Table } from "@chakra-ui/react";
-
-const positionMap = {
-  Goalkeeper: "Bramkarz",
-  Defender: "Obrońca",
-  Midfielder: "Pomocnik",
-  Forward: "Napastnik",
-};
+import { useTranslation } from "react-i18next";
 
 const ResultTable = ({ startGameweek, endGameweek, players }) => {
+  const { t } = useTranslation();
+
   const renderPointsColumns = () => {
     const columns = [];
     for (let gw = startGameweek; gw <= endGameweek; gw++) {
       columns.push(
         <Table.ColumnHeader key={`expected-${gw}`}>
-          Przew. GW{gw}
+          {t("resultTable.expectedPoints", { gw })}
         </Table.ColumnHeader>,
       );
       columns.push(
         <Table.ColumnHeader key={`actual-${gw}`}>
-          Zdob. GW{gw}
+          {t("resultTable.actualPoints", { gw })}
         </Table.ColumnHeader>,
       );
     }
@@ -34,12 +30,12 @@ const ResultTable = ({ startGameweek, endGameweek, players }) => {
         <Table.Cell key={`expected-${gw}`}>
           {player.expectedPoints?.[gw - 1] !== undefined
             ? parseFloat(player.expectedPoints[gw - 1]).toFixed(2)
-            : "??"}
+            : t("resultTable.noData")}
         </Table.Cell>,
       );
       cells.push(
         <Table.Cell key={`actual-${gw}`}>
-          {player.points?.[gw - 1] ?? "??"}
+          {player.points?.[gw - 1] ?? t("resultTable.noData")}
         </Table.Cell>,
       );
     }
@@ -58,10 +54,13 @@ const ResultTable = ({ startGameweek, endGameweek, players }) => {
       >
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeader>Piłkarz</Table.ColumnHeader>
-            <Table.ColumnHeader>Drużyna</Table.ColumnHeader>
-            <Table.ColumnHeader>Pozycja</Table.ColumnHeader>
-            <Table.ColumnHeader>Cena</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("resultTable.player")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("resultTable.team")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("resultTable.position")}</Table.ColumnHeader>
+            <Table.ColumnHeader>{t("resultTable.price")}</Table.ColumnHeader>
+            <Table.ColumnHeader>
+              {t("resultTable.availability")}
+            </Table.ColumnHeader>
             {renderPointsColumns()}
           </Table.Row>
         </Table.Header>
@@ -72,15 +71,22 @@ const ResultTable = ({ startGameweek, endGameweek, players }) => {
                 <Table.Cell>{player.name}</Table.Cell>
                 <Table.Cell>{player.team.name}</Table.Cell>
                 <Table.Cell>
-                  {positionMap[player.position] || player.position}
+                  {t(`positions.${player.position.toLowerCase()}`, {
+                    defaultValue: player.position,
+                  })}
                 </Table.Cell>
                 <Table.Cell>{(player.price / 10).toFixed(1)}</Table.Cell>
+                <Table.Cell>
+                  {player.availability !== undefined
+                    ? `${player.availability}%`
+                    : t("resultTable.noData")}
+                </Table.Cell>
                 {renderPointsCells(player)}
               </Table.Row>
             ))
           ) : (
             <Table.Row>
-              <Table.Cell>Brak wyników</Table.Cell>
+              <Table.Cell> {t("resultTable.noResults")}</Table.Cell>
             </Table.Row>
           )}
         </Table.Body>
@@ -100,6 +106,8 @@ ResultTable.propTypes = {
         name: PropTypes.string.isRequired,
       }).isRequired,
       position: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      availability: PropTypes.number,
       expectedPoints: PropTypes.arrayOf(PropTypes.string),
       points: PropTypes.arrayOf(PropTypes.number),
     }),

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Spinner, Text, VStack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import {
   DialogContent,
@@ -14,6 +15,8 @@ import {
 import { Button } from "./button";
 
 const LoadingModal = ({ isOpen, text, error, onClose }) => {
+  const { t } = useTranslation();
+
   return (
     <DialogRoot
       open={isOpen}
@@ -24,7 +27,11 @@ const LoadingModal = ({ isOpen, text, error, onClose }) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{error ? "Błąd!" : "Proszę czekać..."}</DialogTitle>
+          <DialogTitle>
+            {error
+              ? t("loadingModal.errorTitle")
+              : t("loadingModal.loadingTitle")}
+          </DialogTitle>
         </DialogHeader>
         <DialogBody>
           <VStack spacing={4} align="center" justify="center">
@@ -42,7 +49,7 @@ const LoadingModal = ({ isOpen, text, error, onClose }) => {
           <DialogFooter display="flex" justifyContent="center">
             <DialogActionTrigger asChild>
               <Button colorPalette="purple" onClick={onClose}>
-                Wróć do solvera
+                {t("loadingModal.returnButton")}
               </Button>
             </DialogActionTrigger>
           </DialogFooter>

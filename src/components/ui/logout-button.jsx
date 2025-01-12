@@ -1,10 +1,13 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 export const LogoutButton = React.forwardRef(function LogoutButton(
   { onClick, isLoading, ...props },
   ref,
 ) {
+  const { t } = useTranslation();
+
   return (
     <Button
       colorPalette="red"
@@ -13,7 +16,7 @@ export const LogoutButton = React.forwardRef(function LogoutButton(
       ref={ref}
       {...props}
     >
-      Wyloguj się
+      {t("buttons.logout")}
     </Button>
   );
 });

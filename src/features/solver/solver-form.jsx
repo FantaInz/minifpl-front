@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Box, Stack, Input } from "@chakra-ui/react";
 import { useForm, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import Select from "react-select";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { DataListItem, DataListRoot } from "@/components/ui/data-list";
 import { usePlayers } from "@/features/search/api/search-players";
 
 const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
+  const { t } = useTranslation();
   const { data } = usePlayers({
     pageSize: 1000,
     pageNumber: 0,
@@ -30,10 +32,10 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
   }));
 
   const items = [
-    { label: "ID zespołu", value: teamId },
-    { label: "Nazwa zespołu", value: teamName },
-    { label: "W banku", value: `${budget} mln` },
-    { label: "Dostępne transfery", value: freeTransfers },
+    { label: t("solverForm.teamId"), value: teamId },
+    { label: t("solverForm.teamName"), value: teamName },
+    { label: t("solverForm.budget"), value: `${budget} mln` },
+    { label: t("solverForm.freeTransfers"), value: freeTransfers },
   ];
 
   const {
@@ -56,7 +58,6 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
     };
 
     onSubmit(mappedData);
-    console.log("Formularz wysłany:", mappedData);
   };
 
   return (
@@ -83,25 +84,25 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
       <form onSubmit={handleSubmit(onFormSubmit)}>
         <Stack spacing={4} mt={6}>
           <Field
-            label="Nazwa planu"
+            label={t("solverForm.planName")}
             invalid={!!errors.planName}
             errorText={errors.planName?.message}
           >
             <Input
-              placeholder="Wpisz nazwę planu"
+              placeholder={t("solverForm.planNamePlaceholder")}
               width={{ base: "100%", md: "50%" }}
               {...register("planName", {
-                required: "Nazwa planu jest wymagana",
+                required: t("solverForm.planNameRequired"),
                 minLength: {
                   value: 3,
-                  message: "Nazwa planu musi mieć co najmniej 3 znaki",
+                  message: t("solverForm.planNameMinLength"),
                 },
               })}
             />
           </Field>
 
           <Field
-            label="Liczba kolejek"
+            label={t("solverForm.gameweeks")}
             invalid={!!errors.gameweeks}
             errorText={errors.gameweeks?.message}
           >
@@ -109,13 +110,13 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
               name="gameweeks"
               control={control}
               rules={{
-                required: "Wybierz liczbę kolejek",
+                required: t("solverForm.gameweeksRequired"),
               }}
               render={({ field }) => (
                 <Select
                   {...field}
                   options={gameweeksOptions}
-                  placeholder="Wybierz liczbę kolejek"
+                  placeholder={t("solverForm.gameweeksPlaceholder")}
                   styles={customStyles({
                     minWidth: "200px",
                     fontSize: "0.875rem",
@@ -125,7 +126,7 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
             />
           </Field>
 
-          <Field label="Wymagani gracze">
+          <Field label={t("solverForm.mustHavePlayers")}>
             <Controller
               name="playersToKeep"
               control={control}
@@ -134,7 +135,7 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
                   {...field}
                   options={suggestions}
                   isMulti
-                  placeholder="Wybierz graczy"
+                  placeholder={t("solverForm.mustHavePlaceholder")}
                   styles={customStyles({
                     minWidth: "200px",
                     maxWidth: "400px",
@@ -145,7 +146,7 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
             />
           </Field>
 
-          <Field label="Gracze do unikania">
+          <Field label={t("solverForm.avoidPlayers")}>
             <Controller
               name="playersToAvoid"
               control={control}
@@ -154,7 +155,7 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
                   {...field}
                   options={suggestions}
                   isMulti
-                  placeholder="Wybierz graczy"
+                  placeholder={t("solverForm.avoidPlaceholder")}
                   styles={customStyles({
                     minWidth: "200px",
                     maxWidth: "400px",
@@ -172,7 +173,7 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
             width={{ base: "50%", md: "20%" }}
             mx="auto"
           >
-            Uruchom
+            {t("solverForm.submitButton")}
           </Button>
         </Stack>
       </form>

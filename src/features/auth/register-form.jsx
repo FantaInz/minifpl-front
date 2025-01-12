@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { Stack, Input, Text } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useRegister, useLogin } from "@/lib/auth";
 import { useNavigation } from "@/hooks/use-navigation";
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
-import { translateError } from "@/utils/translate-error";
+import { useTranslateError } from "@/utils/translate-error";
 import { Button } from "@/components/ui/button";
 
 const RegisterForm = () => {
+  const { t } = useTranslation();
+  const { translateError } = useTranslateError();
   const [registerError, setRegisterError] = useState("");
   const [isRegisteringLocal, setIsRegisteringLocal] = useState(false);
   const { goToSolver } = useNavigation();
@@ -28,19 +31,16 @@ const RegisterForm = () => {
 
     registerUser(data, {
       onSuccess: () => {
-        console.log("Zarejestrowano pomyślnie!");
         login(
           { username: data.username, password: data.password },
           {
             onSuccess: () => {
-              console.log("Zalogowano po rejestracji!");
               goToSolver();
             },
             onError: (error) => {
               const translatedError = translateError(
                 error.response?.data?.detail || error.message,
               );
-              console.error("Błąd logowania po rejestracji:", translatedError);
               setRegisterError(translatedError);
             },
           },
@@ -50,7 +50,6 @@ const RegisterForm = () => {
         const translatedError = translateError(
           error.response?.data?.detail || error.message,
         );
-        console.error("Błąd rejestracji:", translatedError);
         setRegisterError(translatedError);
       },
       onSettled: () => {
@@ -63,7 +62,7 @@ const RegisterForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={4}>
         <Field
-          label="Nazwa użytkownika"
+          label={t("registerForm.usernameLabel")}
           invalid={!!errors.username}
           errorText={errors.username?.message}
         >
@@ -72,14 +71,14 @@ const RegisterForm = () => {
             border="1px solid"
             borderColor="gray.400"
             {...register("username", {
-              required: "Nazwa użytkownika jest wymagana",
+              required: t("registerForm.usernameRequired"),
               minLength: { value: 3, message: "Min. 3 znaki" },
             })}
           />
         </Field>
 
         <Field
-          label="Adres e-mail"
+          label={t("registerForm.emailLabel")}
           invalid={!!errors.email}
           errorText={errors.email?.message}
         >
@@ -88,17 +87,17 @@ const RegisterForm = () => {
             border="1px solid"
             borderColor="gray.400"
             {...register("email", {
-              required: "Adres e-mail jest wymagany",
+              required: t("registerForm.emailRequired"),
               pattern: {
                 value: /^\S+@\S+\.\S+$/,
-                message: "Nieprawidłowy e-mail",
+                message: t("registerForm.emailInvalid"),
               },
             })}
           />
         </Field>
 
         <Field
-          label="Hasło"
+          label={t("registerForm.passwordLabel")}
           invalid={!!errors.password}
           errorText={errors.password?.message}
         >
@@ -107,8 +106,11 @@ const RegisterForm = () => {
             border="1px solid"
             borderColor="gray.400"
             {...register("password", {
-              required: "Hasło jest wymagane",
-              minLength: { value: 8, message: "Min. 8 znaków" },
+              required: t("registerForm.passwordRequired"),
+              minLength: {
+                value: 8,
+                message: t("registerForm.passwordMinLength"),
+              },
             })}
           />
         </Field>
@@ -122,7 +124,7 @@ const RegisterForm = () => {
           mt={5}
           loading={isRegistering || isRegisteringLocal}
         >
-          Zarejestruj się
+          {t("registerForm.submitButton")}
         </Button>
       </Stack>
     </form>

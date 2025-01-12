@@ -19,14 +19,10 @@ import LanguageSwitcher from "@/components/ui/language-switcher";
 import { paths } from "@/config/paths";
 import { useLogout } from "@/lib/auth";
 import { Collapsible } from "@chakra-ui/react";
-
-const Links = [
-  { name: "Solver", path: paths.app.solver.path },
-  { name: "Twoje plany", path: paths.app.plans.path },
-  { name: "Predykcje", path: paths.app.predictions.path },
-];
+import { useTranslation } from "react-i18next";
 
 const NavBar = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = React.useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -39,6 +35,12 @@ const NavBar = () => {
     queryClient.clear();
     await logout.mutateAsync();
   };
+
+  const Links = [
+    { name: t("navbar.solver"), path: paths.app.solver.path },
+    { name: t("navbar.plans"), path: paths.app.plans.path },
+    { name: t("navbar.predictions"), path: paths.app.predictions.path },
+  ];
 
   return (
     <Box bg="white" borderBottom="1px solid" borderColor="gray.200" px={4}>
@@ -94,26 +96,17 @@ const NavBar = () => {
             <Box pt={4} width="100%" display="flex" justifyContent="center">
               <LanguageSwitcher />
             </Box>
-            <NavLinkItem
-              to={paths.app.solver.path}
-              data-testid="nav-solver-mobile"
-            >
-              Solver
-            </NavLinkItem>
-            <Separator />
-            <NavLinkItem
-              to={paths.app.plans.path}
-              data-testid="nav-plans-mobile"
-            >
-              Twoje plany
-            </NavLinkItem>
-            <Separator />
-            <NavLinkItem
-              to={paths.app.predictions.path}
-              data-testid="nav-predictions-mobile"
-            >
-              Predykcje
-            </NavLinkItem>
+            {Links.map((link) => (
+              <React.Fragment key={link.name}>
+                <NavLinkItem
+                  to={link.path}
+                  data-testid={`nav-${link.name.toLowerCase()}-mobile`}
+                >
+                  {link.name}
+                </NavLinkItem>
+                <Separator />
+              </React.Fragment>
+            ))}
             <Box pt={4} width="100%" display="flex" justifyContent="center">
               <LogoutButton
                 onClick={handleLogout}

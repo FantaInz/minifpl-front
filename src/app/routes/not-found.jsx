@@ -2,19 +2,23 @@ import React from "react";
 import { Heading, Text, VStack, Icon, Container } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { FiAlertTriangle } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
 
 const NotFoundPage = () => {
+  const { t } = useTranslation();
   const { data: user } = useUser();
 
   const targetPath = user
     ? paths.app.solver.getHref()
     : paths.auth.main.getHref();
 
-  const buttonText = user ? "Przejdź do solvera" : "Przejdź do logowania";
+  const buttonText = user
+    ? t("notFoundPage.goToSolver")
+    : t("notFoundPage.goToLogin");
 
   return (
     <Container
@@ -34,7 +38,7 @@ const NotFoundPage = () => {
         </Heading>
 
         <Text fontSize="lg" color="gray.600">
-          Ups! Strona, której szukasz, nie została znaleziona.
+          {t("notFoundPage.message")}
         </Text>
 
         <Button

@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Flex, Spinner, Text, HStack } from "@chakra-ui/react";
+
 import SearchForm from "@/features/search/search-form";
 import { usePlayers } from "@/features/search/api/search-players";
 import { useMaxWeek } from "@/features/search/api/get-max-predictions";
@@ -11,8 +12,10 @@ import {
   PaginationRoot,
 } from "@/components/ui/pagination";
 import ResultTable from "@/features/search/result-table";
+import { useTranslation } from "react-i18next";
 
 const PredictionsPage = () => {
+  const { t } = useTranslation();
   const { data: maxWeek, isLoading, error: maxWeekError } = useMaxWeek();
   const [filters, setFilters] = React.useState(null);
   const [pageNumber, setPageNumber] = React.useState(0);
@@ -43,7 +46,6 @@ const PredictionsPage = () => {
     setFilters(filteredSearchData);
     setGameweekRange({ startGameweek: start, endGameweek });
     setPageNumber(0);
-    console.log("Filtry wyszukiwania:", filteredSearchData);
   };
 
   const handlePageChange = (page) => {
@@ -58,16 +60,16 @@ const PredictionsPage = () => {
   React.useEffect(() => {
     if (maxWeekError) {
       toaster.create({
-        title: "Błąd",
-        description: "Nie udało się pobrać danych o maksymalnej kolejce.",
+        title: t("error.title"),
+        description: t("error.maxWeekFetch"),
         type: "error",
       });
     }
 
     if (playersError) {
       toaster.create({
-        title: "Błąd",
-        description: "Nie udało się pobrać wyników wyszukiwania graczy.",
+        title: t("error.title"),
+        description: t("error.playerFetch"),
         type: "error",
       });
     }
@@ -82,7 +84,7 @@ const PredictionsPage = () => {
         flexDirection="column"
       >
         <Spinner size="xl" role="status" />
-        <Text mt={4}>Ładowanie danych...</Text>
+        <Text mt={4}>{t("loading.data")}</Text>
       </Flex>
     );
   }
@@ -125,7 +127,9 @@ const PredictionsPage = () => {
             players={players}
           />
         ) : (
-          <Text size="xl">Brak rezultatów</Text>
+          <Text size="xl" mx="auto">
+            {t("search.noResults")}
+          </Text>
         )}
         {totalPages > 1 && (
           <Flex justifyContent="center" mt={4}>

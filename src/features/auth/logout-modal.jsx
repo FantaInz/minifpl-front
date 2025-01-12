@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Text, HStack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,19 +14,25 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { LogoutButton } from "@/components/ui/logout-button";
+import { toaster } from "@/components/ui/toaster";
 
 const LogoutModal = ({ isOpen, onConfirm, onClose }) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = async () => {
     setIsLoading(true);
     try {
       await onConfirm();
-      console.log("Logged out successfully!");
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      setIsLoading(false);
+      toaster.create({
+        title: t("logoutModal.successMessage"),
+        type: "success",
+      });
+    } catch {
+      toaster.create({
+        title: t("logoutModal.errorMessage"),
+        type: "error",
+      });
     }
   };
 
@@ -39,18 +46,16 @@ const LogoutModal = ({ isOpen, onConfirm, onClose }) => {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Zakończenie sesji</DialogTitle>
-        </DialogHeader>{" "}
+          <DialogTitle>{t("logoutModal.title")}</DialogTitle>
+        </DialogHeader>
         <DialogBody>
-          <Text>
-            Jesteś obecnie zalogowany. Czy na pewno chcesz się wylogować?
-          </Text>
+          <Text>{t("logoutModal.body")}</Text>
         </DialogBody>
         <DialogFooter>
           <HStack spacing={4} width="full" justify="center">
             <DialogActionTrigger asChild>
               <Button colorPalette="blue" onClick={onClose}>
-                Wróć do solvera
+                {t("logoutModal.returnButton")}
               </Button>
             </DialogActionTrigger>
             <DialogActionTrigger asChild>

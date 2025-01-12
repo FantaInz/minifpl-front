@@ -9,8 +9,10 @@ import LanguageSwitcher from "@/components/ui/language-switcher";
 import { useUser, useLogout } from "@/lib/auth";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 const AuthTabs = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = React.useState("login");
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
@@ -65,8 +67,8 @@ const AuthTabs = () => {
         fitted
       >
         <Tabs.List>
-          <Tabs.Trigger value="login">Logowanie</Tabs.Trigger>
-          <Tabs.Trigger value="register">Rejestracja</Tabs.Trigger>
+          <Tabs.Trigger value="login">{t("tabs.login")}</Tabs.Trigger>
+          <Tabs.Trigger value="register">{t("tabs.register")}</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="login">
           <LoginForm />

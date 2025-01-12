@@ -11,10 +11,14 @@ import { useSquad } from "@/features/solver/api/get-squad";
 import { useOptimizeSquad } from "@/features/solver/api/optimize-squad";
 import { useSavePlan } from "@/features/solver/api/save-plan";
 import { useNavigation } from "@/hooks/use-navigation";
-import { translateErrorSolver } from "@/utils/translate-error";
+import { useTranslateError } from "@/utils/translate-error";
+import { toaster } from "@/components/ui/toaster";
+import { useTranslation } from "react-i18next";
 
 const SolverPage = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { translateErrorSolver } = useTranslateError();
   const { goToSolver, goToPlans } = useNavigation();
   const { data: user, isLoading: isUserLoading } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,30 +39,27 @@ const SolverPage = () => {
   );
 
   const { mutate: savePlan } = useSavePlan({
-    onSuccess: async (data) => {
-      console.log("Plan zapisany:", data);
-      try {
-        await queryClient.invalidateQueries({ queryKey: ["myPlans"] });
-        setIsLoadingModalOpen(false);
-        setErrorMessage("");
-        setSavedPlanName("");
-        goToPlans();
-      } catch (error) {
-        console.error("Błąd podczas odświeżania planów:", error.message);
-        setErrorMessage("Nie udało się odświeżyć planów.");
-        setIsLoadingModalOpen(false);
-      }
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["myPlans"] });
+      setIsLoadingModalOpen(false);
+      toaster.create({
+        title: t("toaster.planSaved.title"),
+        description: t("toaster.planSaved.description"),
+        type: "success",
+      });
+      setErrorMessage("");
+      setSavedPlanName("");
+      goToPlans();
     },
     onError: (error) => {
-      console.error("Błąd zapisywania planu:", error.message);
-      setErrorMessage("Nie udało się zapisać planu. Spróbuj ponownie.");
+      const message = t("errors.planSave", { detail: error.message });
+      setErrorMessage(message);
       setIsLoadingModalOpen(true);
     },
   });
 
-  const optimizeSquadMutation = useOptimizeSquad({
+  const { mutate: optimizeSquad } = useOptimizeSquad({
     onSuccess: (optimizedData) => {
-      console.log("Optimized Squad:", optimizedData);
       setErrorMessage("");
       savePlan({
         ...optimizedData,
@@ -66,7 +67,6 @@ const SolverPage = () => {
       });
     },
     onError: (error) => {
-      console.error("Optimization Error:", error.message);
       const message = error.response?.data?.detail || error.message;
       setErrorMessage(translateErrorSolver(message));
       setIsLoadingModalOpen(true);
@@ -75,8 +75,9 @@ const SolverPage = () => {
 
   const handleSolverFormSubmit = (data) => {
     setSavedPlanName(data.planName);
+    setErrorMessage("");
     setIsLoadingModalOpen(true);
-    optimizeSquadMutation.mutate(data);
+    optimizeSquad(data);
   };
 
   const handleCloseModal = () => {
@@ -94,15 +95,23 @@ const SolverPage = () => {
   const handleSubmitTeamId = async (teamId) => {
     try {
       setTeamId(teamId);
-
       queryClient.setQueryData(["authenticated-user"], (oldData) => ({
         ...oldData,
         squad_id: teamId,
       }));
       setHasSquadId(true);
       setIsModalOpen(false);
+      toaster.create({
+        title: t("toaster.teamIdUpdated.title"),
+        description: t("toaster.teamIdUpdated.description"),
+        type: "success",
+      });
     } catch (error) {
-      console.error("Błąd przy aktualizacji składu:", error.message);
+      toaster.create({
+        title: t("toaster.teamIdUpdateFailed.title"),
+        description: t("toaster.teamIdUpdateFailed.description"),
+        type: "error",
+      });
       throw error;
     }
   };
@@ -116,7 +125,7 @@ const SolverPage = () => {
         flexDirection="column"
       >
         <Spinner size="xl" role="status" />
-        <Text mt={4}>Pobieranie danych o składzie...</Text>
+        <Text mt={4}>{t("solverPage.loadingSquad")}</Text>
       </Flex>
     );
   }
@@ -141,7 +150,7 @@ const SolverPage = () => {
         >
           <Box flex="1" p={4} order={[2, 1]}>
             <Heading size="4xl" mb={4} textAlign="center">
-              Twój skład w {squadData?.lastUpdate} kolejce
+              {t("solverPage.yourSquad", { gameweek: squadData?.lastUpdate })}
             </Heading>
 
             <Pitch
@@ -164,14 +173,14 @@ const SolverPage = () => {
         </Flex>
       ) : (
         <Text textAlign="center" fontSize="2xl" mt={6}>
-          Brak danych o składzie.
+          {t("solverPage.noSquadData")}
         </Text>
       )}
 
       <TeamModal isOpen={isModalOpen} onSubmit={handleSubmitTeamId} />
       <LoadingModal
         isOpen={isLoadingModalOpen}
-        text="Trwa optymalizacja składu..."
+        text={t("solverPage.optimizationInProgress")}
         error={errorMessage}
         onClose={handleCloseModal}
       />

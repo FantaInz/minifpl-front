@@ -1,8 +1,11 @@
 import React from "react";
 import { Flex, Heading, Text } from "@chakra-ui/react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const NoPlansMessage = ({ onNavigateToSolver }) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       height="100vh"
@@ -12,13 +15,13 @@ const NoPlansMessage = ({ onNavigateToSolver }) => {
       textAlign="center"
     >
       <Heading size="2xl" mb={4}>
-        Nie znaleziono planów
+        {t("noPlansMessage.title")}
       </Heading>
       <Text fontSize="lg" color="gray.500" mb={6}>
-        Wygląda na to, że nie masz żadnych zapisanych planów.
+        {t("noPlansMessage.description")}
       </Text>
       <Button colorPalette="blue" size="xl" onClick={onNavigateToSolver}>
-        Przejdź do solvera
+        {t("noPlansMessage.buttonText")}
       </Button>
     </Flex>
   );
