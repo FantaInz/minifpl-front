@@ -11,10 +11,6 @@ const Player = ({ name, club_id, points }) => {
   const { t } = useTranslation();
 
   const clubCode = mapTeamIdToCode(club_id);
-  const shirtSrc = new URL(
-    `/src/assets/koszulki/${clubCode}.svg`,
-    import.meta.url,
-  ).href;
   const lastName = getLastName(name);
 
   const renderPoints = () => {
@@ -143,7 +139,7 @@ const Player = ({ name, club_id, points }) => {
       maxW="100px"
     >
       <Image
-        src={shirtSrc}
+        src={`/src/assets/koszulki/${clubCode}.svg`}
         alt={`${clubCode} shirt`}
         boxSize={{ base: "30px", sm: "40px", md: "50px" }}
       />
