@@ -6,22 +6,20 @@ const useProcessedPlayers = (planDetails, selectedGameweek) => {
 
   if (!currentSquad) return [];
 
-  const reversedSubs = [...(currentSquad.subs || [])].reverse();
-  const sortedSubs =
-    reversedSubs.length > 0
-      ? [
-          reversedSubs[0],
-          ...reversedSubs
-            .slice(1)
-            .sort(
-              (a, b) =>
-                b.expectedPoints[selectedGameweek - 1] -
-                a.expectedPoints[selectedGameweek - 1],
-            ),
-        ]
-      : [];
+  const subs = currentSquad.subs || [];
+  const goalkeeper = subs.find((player) => player.position === "Goalkeeper");
+  const outfieldPlayers = subs
+    .filter((player) => player.position !== "Goalkeeper")
+    .sort(
+      (a, b) =>
+        b.expectedPoints[selectedGameweek - 1] -
+        a.expectedPoints[selectedGameweek - 1],
+    );
+
+  const sortedSubs = [goalkeeper, ...outfieldPlayers];
 
   const players = [...(currentSquad.team || []), ...sortedSubs];
+
   return players.map((player) => ({
     ...player,
     expectedPoints: player.expectedPoints.map((point) =>
