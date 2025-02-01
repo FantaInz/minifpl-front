@@ -184,7 +184,7 @@ const SolverForm = ({ freeTransfers, budget, teamId, teamName, onSubmit }) => {
 SolverForm.propTypes = {
   freeTransfers: PropTypes.number.isRequired,
   budget: PropTypes.number.isRequired,
-  teamId: PropTypes.number.isRequired,
+  teamId: PropTypes.string.isRequired,
   teamName: PropTypes.string.isRequired,
   onSubmit: PropTypes.func,
 };

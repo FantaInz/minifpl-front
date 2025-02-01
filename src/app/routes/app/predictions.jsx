@@ -10,6 +10,7 @@ import {
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
+  PaginationPageText,
 } from "@/components/ui/pagination";
 import ResultTable from "@/features/search/result-table";
 import { useTranslation } from "react-i18next";
@@ -115,7 +116,7 @@ const PredictionsPage = () => {
         borderRadius="lg"
         boxShadow="lg"
         bg="white"
-        width={{ base: "100%", md: "90%" }}
+        width={{ base: "100%", md: "80%" }}
       >
         {players.length > 0 ? (
           <ResultTable
@@ -137,10 +138,12 @@ const PredictionsPage = () => {
               page={pageNumber + 1}
               onPageChange={(e) => handlePageChange(e.page)}
               colorPalette="blue"
+              siblingCount="1"
             >
               <HStack mt={4}>
                 <PaginationPrevTrigger />
-                <PaginationItems />
+                <PaginationItems hideBelow="md" />
+                <PaginationPageText hideFrom="md" />
                 <PaginationNextTrigger />
               </HStack>
             </PaginationRoot>

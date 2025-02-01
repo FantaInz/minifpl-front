@@ -7,7 +7,7 @@ const AppLayout = () => {
   return (
     <Box>
       <NavBar />
-      <Box p={4}>
+      <Box p={4} bg="#EFEFEF">
         <Outlet />
       </Box>
     </Box>

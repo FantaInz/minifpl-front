@@ -1,5 +1,5 @@
 :root {
-  background-color: #efefef; /* Kolor tła */
+  --background-color: #efefef;
 }
 
 html,
@@ -9,4 +9,5 @@ body,
   padding: 0;
   height: 100%;
   width: 100%;
+  background-color: var(--background-color);
 }
